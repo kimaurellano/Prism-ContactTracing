@@ -1,8 +1,30 @@
 ﻿<prism:PrismApplication x:Class="PrismContactTracing.Core.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:prism="http://prismlibrary.com/">
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 
+                    Primary colour = seen in input fields 
+                    Secondary colour = seen in ???
+                -->
+                <materialDesign:CustomColorTheme BaseTheme="Dark" PrimaryColor="#FFFFFF" SecondaryColor="#2A9134" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="{x:Static materialDesign:Spelling.IgnoreAllMenuItemStyleKey}"  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                <!--Change this to whatever is appropriate to for your application-->
+                <Setter Property="Header" Value="Localized Ignore All" />
+            </Style>
+
+            <Style x:Key="{x:Static materialDesign:Spelling.NoSuggestionsMenuItemStyleKey}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                <!--Change this to whatever is appropriate to for your application-->
+                <Setter Property="Header" Value="Localized (no spelling suggestions)" />
+                <Setter Property="IsEnabled" Value="False" />
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
