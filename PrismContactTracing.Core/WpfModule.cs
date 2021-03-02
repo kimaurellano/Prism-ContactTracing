@@ -1,6 +1,9 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+using PrismContactTracing.Core.DataComponent;
+using PrismContactTracing.Core.Interface;
+using PrismContactTracing.WPF.Views;
 
 namespace PrismContactTracing.Core {
     class WpfModule : IModule {
@@ -8,13 +11,13 @@ namespace PrismContactTracing.Core {
             var regionManager = containerProvider.Resolve<IRegionManager>();
 
             // Makes request to ContentRegion to be replace with target view
-            regionManager.RequestNavigate("ContentRegion", "YourView");
+            regionManager.RegisterViewWithRegion("ContentRegion", typeof(LoginView));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry) {
-            //containerRegistry.Register<IDbConnector, DbConnector>();
+            containerRegistry.Register<IDbConnector, DbConnector>();
 
-            //containerRegistry.RegisterForNavigation<LoginView>();
+            containerRegistry.RegisterForNavigation<LoginView>();
         }
     }
 }

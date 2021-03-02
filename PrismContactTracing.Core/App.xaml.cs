@@ -1,6 +1,8 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Mvvm;
 using Prism.Unity;
+using PrismContactTracing.Core.ViewModels;
 using PrismContactTracing.WPF.Views;
 using System.Windows;
 
@@ -23,6 +25,8 @@ namespace PrismContactTracing.Core {
 
         protected override void ConfigureViewModelLocator() {
             base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.Register<LoginView, LoginViewModel>();
         }
     }
 }
