@@ -63,13 +63,13 @@
             <TextBlock Text="Login" HorizontalAlignment="Center"
                        TextBlock.Foreground="#FFFFFF" FontFamily="Montserrat Semibold" FontSize="38" FontWeight="Regular"
                        Margin="0,70,0,0" Padding="2,0,0,0"/>
-            <TextBox Style="{DynamicResource MaterialDesignTextBox}"
+            <TextBox Text="{Binding Username, Mode=TwoWay}" Style="{DynamicResource MaterialDesignTextBox}"
                      materialDesign:HintAssist.Hint="Username" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
                      Foreground="#FFFFFF"
                      FontFamily="Montserrat" FontSize="18"
                      MinHeight="50" Height="50" Width="267"
                      Margin="0,60,0,0"/>
-            <PasswordBox Style="{DynamicResource MaterialDesignPasswordBox}"
+            <PasswordBox x:Name="txtPassword" Style="{DynamicResource MaterialDesignPasswordBox}"
                          materialDesign:HintAssist.Hint="Password" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
                          Foreground="#FFFFFF" HorizontalAlignment="Center"
                          FontFamily="Montserrat" FontSize="18" 
