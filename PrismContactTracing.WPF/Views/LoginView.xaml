@@ -55,9 +55,11 @@
     <Grid Style="{StaticResource MainBG}">
         <TextBlock Text="BARANGAR TEJERO CONTACT TRACING" HorizontalAlignment="Center" VerticalAlignment="Top" 
                        TextBlock.Foreground="#FFFFFF" FontFamily="Montserrat Semibold" FontSize="46" FontWeight="Regular" 
-                       Margin="0,71,0,0"/>
-        <Border Height="556" Width="452" Style="{StaticResource LoginCustomBorder}"/>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Height="556" Width="452">
+                       Margin="0,101,0,0"/>
+        <Border Height="556" Style="{StaticResource LoginCustomBorder}" Margin="0,252,0,0" Width="452" 
+                VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Vertical" Height="556" Margin="0,252,0,0" Width="452"
+                    VerticalAlignment="Top" HorizontalAlignment="Center">
             <TextBlock Text="Login" HorizontalAlignment="Center"
                        TextBlock.Foreground="#FFFFFF" FontFamily="Montserrat Semibold" FontSize="38" FontWeight="Regular"
                        Margin="0,70,0,0" Padding="2,0,0,0"/>
