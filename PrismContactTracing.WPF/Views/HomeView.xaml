@@ -30,29 +30,57 @@
                        FontFamily="Montserrat SemiBold" 
                        FontWeight="Regular" 
                        HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,25,0,0"/>
-            <StackPanel Orientation="Vertical" Margin="0,90,0,0">
+            <StackPanel Orientation="Vertical" Height="902" VerticalAlignment="Center">
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="ADMIN"
                         Height="45"
+                        Foreground="#23765A"
+                        TextBlock.FontFamily="Montserrat Semibold"
+                        TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,0,20,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="RESIDENTS"
                         Height="45"
+                        Foreground="#23765A"
+                        TextBlock.FontFamily="Montserrat Semibold"
+                        TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,10,20,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="REPORT"
                         Height="45"
+                        Foreground="#23765A"
+                        TextBlock.FontFamily="Montserrat Semibold"
+                        TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,10,20,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="LOG OUT"
                         Height="45"
+                        Foreground="#23765A"
+                        TextBlock.FontFamily="Montserrat Semibold"
+                        TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,650,20,0"/>
+                        Background="White" Margin="20,620,20,0"/>
+                <TextBlock Text="01/01/2021"
+                           FontFamily="Montserrat Semibold"
+                           FontSize="17"
+                           HorizontalAlignment="Left"
+                           Margin="20,25,0,0"
+                           Foreground="White"/>
+                <TextBlock Text="07:00 AM"
+                           FontFamily="Montserrat Semibold"
+                           FontSize="32"
+                           HorizontalAlignment="Left"
+                           Margin="20,0,0,0"
+                           Foreground="White"/>
             </StackPanel>
         </Grid>
         <!-- DataGrid container -->
         <Grid Margin="10,90,10,0" Height="900" Width="1157" VerticalAlignment="Top">
             <Border CornerRadius="10" Background="White"></Border>
-            <DataGrid x:Name="MainGrid"/>
+            <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}"/>
         </Grid>
         <!-- Live person scan container -->
         <Grid Margin="10,90,10,0" Height="450" Width="375" HorizontalAlignment="Right" VerticalAlignment="Top">
