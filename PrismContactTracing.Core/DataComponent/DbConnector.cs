@@ -10,8 +10,6 @@ namespace PrismContactTracing.Core.DataComponent {
 
         public SqliteConnection DbConnectionInstance { get; set; }
 
-        private string _connection;
-
         public DbConnector() {
             DbConnectionInstance = new SqliteConnection($"Data Source={Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/Resource/ContactTracing.db;");
         }
@@ -22,10 +20,10 @@ namespace PrismContactTracing.Core.DataComponent {
                 DbConnectionInstance.Open();
             } catch (MySqlException e) {
                 MessageBox.Show(e.Message);
-                return isConnected;
+                return !isConnected;
             }
 
-            return !isConnected;
+            return isConnected;
         }
 
         public void Disconnect() {

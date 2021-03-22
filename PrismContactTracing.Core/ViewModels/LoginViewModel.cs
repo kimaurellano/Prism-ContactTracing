@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using PrismContactTracing.Core.Interface;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,9 +59,9 @@ namespace PrismContactTracing.Core.ViewModels {
                 cmd.Parameters.AddWithValue("$password", value.Password);
                 var firstColumn = cmd.ExecuteScalar().ToString();
 
-                if(firstColumn == "0") {
-                    _dbConnector.Disconnect();
+                _dbConnector.Disconnect();
 
+                if (firstColumn == "0") {
                     MessageBox.Show("Invalid credentials", "Login error", MessageBoxButton.OK);
                     return string.Empty;
                 }
