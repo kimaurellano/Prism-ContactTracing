@@ -24,13 +24,13 @@
     <StackPanel Style="{StaticResource MainBG}" Orientation="Horizontal">
         <Grid Width="328" HorizontalAlignment="Left"
               Margin="0,0,10,0">
-            <TextBlock Text="DASHBOARD" 
+            <StackPanel Orientation="Vertical" Height="1080" VerticalAlignment="Center">
+                <TextBlock Text="DASHBOARD" 
                        Foreground="White" 
                        FontSize="32"
                        FontFamily="Montserrat SemiBold" 
                        FontWeight="Regular" 
-                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,25,0,0"/>
-            <StackPanel Orientation="Vertical" Height="902" VerticalAlignment="Center">
+                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="ADMIN"
                         Height="45"
@@ -38,7 +38,7 @@
                         TextBlock.FontFamily="Montserrat Semibold"
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,0,20,0"/>
+                        Background="White" Margin="20,10,20,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="RESIDENTS"
                         Height="45"
@@ -46,7 +46,7 @@
                         TextBlock.FontFamily="Montserrat Semibold"
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,10,20,0"/>
+                        Background="White" Margin="20,15,20,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="REPORT"
                         Height="45"
@@ -54,7 +54,7 @@
                         TextBlock.FontFamily="Montserrat Semibold"
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,10,20,0"/>
+                        Background="White" Margin="20,15,20,0"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="LOG OUT"
                         Height="45"
@@ -78,10 +78,39 @@
             </StackPanel>
         </Grid>
         <!-- DataGrid container -->
-        <Grid Margin="10,90,10,0" Height="900" Width="1157" VerticalAlignment="Top">
-            <Border CornerRadius="10" Background="White"></Border>
-            <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}"/>
-        </Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="10,50,10,10">
+                <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        materialDesign:ButtonAssist.CornerRadius="15"
+                        Height="35" Width="100"
+                        Background="White"
+                        HorizontalAlignment="Left"
+                        Content="Back"
+                        Foreground="#23765A"
+                        FontSize="18"
+                        Visibility="{Binding BackVisibility}"
+                        Command="{Binding ExecuteGenericDelegateGetResidentsCommand}"/>
+                <TextBox Text="{Binding ResidentName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource MaterialDesignTextBox}"
+                         materialDesign:HintAssist.Hint="Resident name" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
+                         Foreground="#FFFFFF"
+                         FontFamily="Montserrat" FontSize="18"
+                         MinHeight="50" Height="50" Width="267"
+                         HorizontalAlignment="Left"
+                         Visibility="{Binding IsVisible}"/>
+                <TextBlock Text="{Binding SearchType, Mode=TwoWay}" 
+                           Foreground="White" 
+                           FontSize="18"
+                           FontFamily="Montserrat SemiBold" 
+                           FontWeight="Regular" 
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid Height="900" Width="1157" VerticalAlignment="Top">
+                <Border CornerRadius="10" Background="White"></Border>
+                <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}" IsReadOnly="True"
+                          SelectedItem="{Binding ResidentDataRowView}" SelectionMode="Single" SelectionUnit="FullRow"/>
+            </Grid>
+        </StackPanel>
         <!-- Live person scan container -->
         <Grid Margin="10,90,10,0" Height="450" Width="375" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Border CornerRadius="10" Background="White"></Border>

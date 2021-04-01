@@ -11,13 +11,14 @@ namespace PrismContactTracing.Core {
             var regionManager = containerProvider.Resolve<IRegionManager>();
 
             // Makes request to ContentRegion to be replace with target view
-            regionManager.RegisterViewWithRegion("ContentRegion", typeof(LoginView));
+            regionManager.RegisterViewWithRegion("ContentRegion", typeof(HomeView));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry) {
             containerRegistry.Register<IDbConnector, DbConnector>();
 
             containerRegistry.RegisterForNavigation<LoginView>();
+            containerRegistry.RegisterForNavigation<HomeView>();
         }
     }
 }
