@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<connectionstring>
+  <server>hidden</server>
+  <port>3306</port>
+  <uid>hidden</uid>
+  <pwd>hidden</pwd>
+  <database>hidden</database>
+</connectionstring>
