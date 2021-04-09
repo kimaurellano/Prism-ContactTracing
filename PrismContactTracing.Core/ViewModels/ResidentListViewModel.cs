@@ -41,6 +41,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
+        public DelegateCommand ExecuteRegistrationDialogCommand { get; private set; }
         public DelegateCommand ExecuteApplyUpdateCommand { get; private set; }
         public DelegateCommand ExecuteSearchContentCommand { get; private set; }
         public DelegateCommand<object> ExecuteLoadResidentsReportCommand { get; private set; }
@@ -109,10 +110,10 @@ namespace PrismContactTracing.Core.ViewModels {
         }
 
         public ResidentListViewModel() {
-            //Start read serial data
-
             Task.Run(() => LoadResidentList(string.Empty));
 
+            ExecuteInsertCommand = new DelegateCommand(async () => await InsertResident());
+            ExecuteRegistrationDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
             ExecuteApplyUpdateCommand = new DelegateCommand(UpdateDb);
             ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentList(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentList(string.Empty));
@@ -153,6 +154,31 @@ namespace PrismContactTracing.Core.ViewModels {
             });
 
             SpinnerEnable = 0f;
+        }
+
+        private async Task InsertResident() {
+            await Task.Run(() => {
+                SpinnerEnable = 1f;
+
+                IsDialogOpen = !IsDialogOpen;
+
+                List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
+                parameter.Add(new KeyValuePair<string, string>("@m_firstname", _firstName));
+                parameter.Add(new KeyValuePair<string, string>("@m_lastname", _lastName));
+                parameter.Add(new KeyValuePair<string, string>("@m_purok", _purok));
+                parameter.Add(new KeyValuePair<string, string>("@m_address", _address));
+                parameter.Add(new KeyValuePair<string, string>("@m_contactnumber", _contactNumber));
+                parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", _eName));
+                parameter.Add(new KeyValuePair<string, string>("@m_econtactname", _eContact));
+
+                QueryStrategy queryStrategy = new QueryStrategy();
+                queryStrategy.SetQuery(new InsertQuery() {
+                    Procedure = "InsertResident",
+                    Parameters = parameter
+                });
+
+                Task.Run(() => LoadResidentList(string.Empty));
+            });
         }
 
         private void UpdateDb() {
