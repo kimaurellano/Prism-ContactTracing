@@ -1,20 +1,15 @@
-﻿using MySql.Data.MySqlClient;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Regions;
 using PrismContactTracing.Core.DataComponent;
-using PrismContactTracing.Core.Interface;
-using PrismContactTracing.Core.Models;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PrismContactTracing.Core.ViewModels {
     public class ResidentListViewModel : BindableBase {
-        private IRegionManager _regionManager;
         private DataTable _mainTable;
         private Cursor _cursorType;
         private string _residentName;
@@ -26,11 +21,14 @@ namespace PrismContactTracing.Core.ViewModels {
         private string _contactNumber;
         private string _eName;
         private string _eContact;
+        private float _notifTransform = 110f;
+        private string _notifMessage;
         private bool _isDialogOpen = false;
         private bool _isEnableEdit = false;
         private bool _isSavingEnable = false;
         private bool _onResidentReportLoaded = true; // To identify which table is displayed then apply proper filter through search input
         private Visibility _isVisible;
+        private float _spinnerEnable = 0f;
 
         public string FirstName { get => _firstName; set { SetProperty(ref _firstName, value); } }
         public string LastName { get => _lastName; set => _lastName = value; }
@@ -43,6 +41,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
+        public DelegateCommand ExecuteApplyUpdateCommand { get; private set; }
         public DelegateCommand ExecuteSearchContentCommand { get; private set; }
         public DelegateCommand<object> ExecuteLoadResidentsReportCommand { get; private set; }
         public DelegateCommand ExecuteGenericDelegateOpenDialogCommand { get; private set; }
@@ -78,6 +77,11 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _isVisible, value); }
         }
 
+        public float SpinnerEnable {
+            get => _spinnerEnable;
+            set { SetProperty(ref _spinnerEnable, value); }
+        }
+
         public bool IsReadOnlyDataGrid {
             get => _isEnableEdit;
             set { SetProperty(ref _isEnableEdit, value); }
@@ -94,27 +98,32 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _cursorType, value); }
         }
 
+        public virtual string NotifMessage {
+            get => _notifMessage;
+            set { SetProperty(ref _notifMessage, value); }
+        }
+
+        public virtual float NotifTransform {
+            get => _notifTransform;
+            set { SetProperty(ref _notifTransform, value); }
+        }
+
         public ResidentListViewModel() {
             //Start read serial data
 
             Task.Run(() => LoadResidentList(string.Empty));
 
-            ExecuteSearchContentCommand = new DelegateCommand(LoadContentBySearch);
+            ExecuteApplyUpdateCommand = new DelegateCommand(UpdateDb);
+            ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentList(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentList(string.Empty));
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
-        }
-
-        private void LoadContentBySearch() {
-            if (_onResidentReportLoaded) {
-                Task.Run(() => LoadResidentList(_residentName));
-            } else {
-                //
-            }
         }
 
         /// <param name="resident">Empty value will get all rows else otherwise</param>
         private async Task LoadResidentList(string resident) {
             await Task.Run(() => {
+                SpinnerEnable = 1f;
+
                 _cursorType = Cursors.Hand;
                 RaisePropertyChanged("CursorType");
 
@@ -141,6 +150,37 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 // Avoiding the main table not to update
                 RaisePropertyChanged("MainDataTable");
+            });
+
+            SpinnerEnable = 0f;
+        }
+
+        private void UpdateDb() {
+            QueryStrategy queryStrategy = new QueryStrategy();
+            queryStrategy.SetQuery(new UpdateQuery() { Procedure = "GetResidentsList", TargetDataTable = MainDataTable});
+
+            Task.Run(() => LoadResidentList(string.Empty));
+
+            Show("Updated successfully", 3000);
+        }
+
+        public virtual void Show(string message, int time) {
+            NotifMessage = message;
+
+            Application.Current.Dispatcher.Invoke(async () => {
+                await Task.Run(() => {
+                    while (NotifTransform > -30) {
+                        NotifTransform -= 1f;
+                        Thread.Sleep(1);
+                    }
+
+                    Thread.Sleep(time);
+
+                    while (NotifTransform < 110f) {
+                        NotifTransform += 1f;
+                        Thread.Sleep(1);
+                    }
+                });
             });
         }
     }

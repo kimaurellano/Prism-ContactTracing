@@ -8,6 +8,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1157">
     <Grid>
@@ -49,7 +50,7 @@
             </Grid>
             <Grid Height="790" Width="1157" VerticalAlignment="Top">
                 <Border CornerRadius="10" Background="White" Grid.ColumnSpan="2"></Border>
-                <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}" IsReadOnly="{Binding IsReadOnlyDataGrid}" CanUserAddRows="False"
+                <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}" IsReadOnly="False" CanUserAddRows="False"
                           SelectedItem="{Binding ResidentDataRowView}" SelectionMode="Extended" SelectionUnit="FullRow" Grid.ColumnSpan="2" Cursor="{Binding CursorType}"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                     FontFamily="Montserrat"
@@ -60,7 +61,7 @@
                     FontFamily="Montserrat"
                     materialDesign:ButtonAssist.CornerRadius="25"
                     Height="50"
-                    Content="Edit" Margin="826,703,215,37" Background="#23765A" Command="{Binding ExecuteIsEnableEditCommand}"/>
+                    Content="Update" Margin="826,703,215,37" Background="#23765A" Command="{Binding ExecuteApplyUpdateCommand}"/>
                 <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                     FontFamily="Montserrat"
                     materialDesign:ButtonAssist.CornerRadius="25"
@@ -68,5 +69,16 @@
                     Content="Register" Margin="974,703,49,37" Background="#23765A" Command="{Binding ExecuteRegistrationDialogCommand}"/>
             </Grid>
         </StackPanel>
+        <materialDesign:Card UniformCornerRadius="25" Width="200" Height="50" materialDesign:ShadowAssist.ShadowDepth="Depth4" VerticalAlignment="Bottom" Margin="0,0,0,50" RenderTransformOrigin="0.5,0.5">
+            <materialDesign:Card.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform Y="{Binding NotifTransform}"/>
+                </TransformGroup>
+            </materialDesign:Card.RenderTransform>
+            <Grid>
+                <TextBlock Text="{Binding NotifMessage}" FontFamily="Montserrat Semibold" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </materialDesign:Card>
+        <fa:ImageAwesome Icon="CircleOutlineNotch" Spin="True" Opacity="{Binding SpinnerEnable}" SpinDuration="2" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#000000"/>
     </Grid>
 </UserControl>
