@@ -21,100 +21,18 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style x:Key="CustomBorder"
-               TargetType="{x:Type Border}">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <SolidColorBrush Color="#000000" Opacity="0.1"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="CornerRadius">
-                <Setter.Value>
-                    <CornerRadius TopLeft="10" TopRight="10" BottomRight="10" BottomLeft="10"/>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
-    <materialDesign:DialogHost Identifier="AddResidentDialog" IsOpen="{Binding IsDialogOpen}" CloseOnClickAway="True">
-        <materialDesign:DialogHost.DialogContent>
-            <StackPanel x:Name="Test" Background="White" Margin="20,20,20,50" Orientation="Vertical">
-                <TextBlock Text="New resident" FontFamily="Montserrat Semibold" FontSize="24" HorizontalAlignment="Left" Margin="15,0,0,0"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBox Text="{Binding FirstName, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                             materialDesign:HintAssist.Hint="First Name" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                             HorizontalAlignment="Left"
-                             FontFamily="Montserrat" FontSize="18"
-                             MinHeight="50" Height="60" Width="397"
-                             Margin="0,50,70,0"/>
-                    <TextBox Text="{Binding LastName, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                     materialDesign:HintAssist.Hint="Last Name" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                     HorizontalAlignment="Right"
-                     FontFamily="Montserrat" FontSize="18"
-                     MinHeight="50" Height="60" Width="397"
-                     Margin="0,50,0,0"/>
-                </StackPanel>
-                <TextBox Text="{Binding ContactNumber, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                     materialDesign:HintAssist.Hint="Contact Number" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                     HorizontalAlignment="Center"
-                     FontFamily="Montserrat" FontSize="18"
-                     MinHeight="50" Height="60" Width="863"
-                     Margin="0,50,0,0"/>
-                <TextBox Text="{Binding Address, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                     materialDesign:HintAssist.Hint="Address" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                     HorizontalAlignment="Center"
-                     FontFamily="Montserrat" FontSize="18"
-                     MinHeight="50" Height="60" Width="863"
-                     Margin="0,50,0,0"/>
-                <TextBox Text="{Binding Purok, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                     materialDesign:HintAssist.Hint="Purok" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                     HorizontalAlignment="Center"
-                     FontFamily="Montserrat" FontSize="18"
-                     MinHeight="50" Height="60" Width="863"
-                     Margin="0,50,0,0"/>
-                <TextBlock Text="Emergency Contact" FontFamily="Montserrat Semibold" FontSize="24" HorizontalAlignment="Left" Margin="15,50,0,0"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBox Text="{Binding EName, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                     materialDesign:HintAssist.Hint="Name" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                     HorizontalAlignment="Left"
-                     FontFamily="Montserrat" FontSize="18"
-                     MinHeight="50" Height="60" Width="397"
-                     Margin="0,30,70,0"/>
-                    <TextBox Text="{Binding EContact, Mode=TwoWay}" Style="{DynamicResource MaterialDesignFilledTextBox}"
-                     materialDesign:HintAssist.Hint="Contacts Number" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                     HorizontalAlignment="Right"
-                     FontFamily="Montserrat" FontSize="18"
-                     MinHeight="50" Height="60" Width="397"
-                     Margin="0,30,0,0"/>
-                </StackPanel>
-                <Button Content="Submit" Command="{Binding ExecuteInsertCommand}" Margin="0,30,0,0" Width="200" Height="50"/>
-            </StackPanel>
-        </materialDesign:DialogHost.DialogContent>
-        <StackPanel Style="{StaticResource MainBG}" Orientation="Horizontal">
-            <Grid Width="328" HorizontalAlignment="Left"
+    <StackPanel Style="{StaticResource MainBG}" Orientation="Horizontal">
+        <Grid Width="328" HorizontalAlignment="Left"
               Margin="0,0,10,0">
-                <StackPanel Orientation="Vertical" Height="1080" VerticalAlignment="Center">
-                    <TextBlock Text="DASHBOARD" 
+            <StackPanel Orientation="Vertical" Height="1080" VerticalAlignment="Center">
+                <TextBlock Text="DASHBOARD" 
                        Foreground="White" 
                        FontSize="32"
                        FontFamily="Montserrat SemiBold" 
                        FontWeight="Regular" 
                        HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="ADMIN"
                         Height="45"
                         Foreground="#23765A"
@@ -122,7 +40,7 @@
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,10,20,0"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="RESIDENTS"
                         Height="45"
                         Foreground="#23765A"
@@ -130,8 +48,8 @@
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,15,20,0"
-                        Command="{Binding ExecuteLoadResidentListCommand}"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding NavigateToCommand}" CommandParameter="ResidentListView"/>
+                <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="REPORT"
                         Height="45"
                         Foreground="#23765A"
@@ -139,8 +57,8 @@
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,15,20,0"
-                        Command="{Binding ExecuteLoadResidentsReportCommand}"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding NavigateToCommand}" CommandParameter="ResidentReportView"/>
+                <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="LOG OUT"
                         Height="45"
                         Foreground="#23765A"
@@ -148,87 +66,27 @@
                         TextBlock.FontSize="20"
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Background="White" Margin="20,620,20,0"/>
-                    <TextBlock Text="01/01/2021"
+                <TextBlock Text="01/01/2021"
                            FontFamily="Montserrat Semibold"
                            FontSize="17"
                            HorizontalAlignment="Left"
                            Margin="20,25,0,0"
                            Foreground="White"/>
-                    <TextBlock Text="07:00 AM"
+                <TextBlock Text="07:00 AM"
                            FontFamily="Montserrat Semibold"
                            FontSize="32"
                            HorizontalAlignment="Left"
                            Margin="20,0,0,0"
                            Foreground="White"/>
-                </StackPanel>
-            </Grid>
-
-            <!--DataGrid container-->
-
-            <StackPanel Orientation="Vertical">
-                <Grid Margin="10,50,10,10">
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        materialDesign:ButtonAssist.CornerRadius="15"
-                        Height="35" Width="100"
-                        Background="White"
-                        HorizontalAlignment="Left"
-                        Content="Back"
-                        Foreground="#23765A"
-                        FontSize="18"
-                        Visibility="{Binding BackVisibility}"
-                        Command="{Binding ExecuteLoadResidentsReportCommand}"/>
-                    <TextBox Text="{Binding ResidentName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource MaterialDesignTextBox}"
-                         materialDesign:HintAssist.Hint="Resident name" materialDesign:HintAssist.FloatingScale="0.8" materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.HelperTextFontSize="20"
-                         Foreground="#FFFFFF"
-                         FontFamily="Montserrat" FontSize="18"
-                         MinHeight="50" Height="50" Width="267"
-                         HorizontalAlignment="Left"
-                         Visibility="{Binding IsVisible}"/>
-                    <TextBlock Text="{Binding SearchType, Mode=TwoWay}" 
-                           Foreground="White" 
-                           FontSize="18"
-                           FontFamily="Montserrat SemiBold" 
-                           FontWeight="Regular" 
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="Right"/>
-                </Grid>
-                <Grid Height="900" Width="1157" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="44*"/>
-                        <ColumnDefinition Width="1113*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border CornerRadius="10" Background="White" Grid.ColumnSpan="2"></Border>
-                    <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}" IsReadOnly="{Binding IsReadOnlyDataGrid}" CanUserAddRows="False"
-                          SelectedItem="{Binding ResidentDataRowView}" SelectionMode="Extended" SelectionUnit="FullRow" Grid.ColumnSpan="2" Cursor="{Binding CursorType}"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                            FontFamily="Montserrat"
-                            materialDesign:ButtonAssist.CornerRadius="25"
-                            Height="50"
-                            Content="Register" Margin="948,816,34,34" Background="#23765A" Command="{Binding ExecuteGenericDelegateOpenDialogCommand}" Grid.Column="1"
-                            Visibility="{Binding DataModifierEnable}"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                            FontFamily="Montserrat"
-                            materialDesign:ButtonAssist.CornerRadius="25"
-                            Height="50"
-                            Content="Edit" Margin="788,816,194,34" Background="#23765A" Command="{Binding ExecuteIsEnableEditCommand}" Grid.Column="1"
-                            Visibility="{Binding DataModifierEnable}"/>
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                            FontFamily="Montserrat"
-                            materialDesign:ButtonAssist.CornerRadius="25"
-                            Height="50"
-                            Content="Archvie" Margin="620,816,362,34" Background="#23765A" Grid.Column="1"
-                            Visibility="{Binding DataModifierEnable}"/>
-                </Grid>
             </StackPanel>
+        </Grid>
 
-            <!--Live person scan container-->
+        <!--DataGrid container-->
+        <ContentControl prism:RegionManager.RegionName="ContentType" Height="1072" Width="1180"/>
 
-            <Grid Margin="10,90,10,0" Height="450" Width="375" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Border CornerRadius="10" Background="White"></Border>
-            </Grid>
-
-            <ContentControl prism:RegionManager.RegionName="HomeRegion"/>
-
-        </StackPanel>
-    </materialDesign:DialogHost>
+        <!--Live person scan container-->
+        <Grid Margin="10,90,10,0" Height="450" Width="375" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Border CornerRadius="10" Background="White"></Border>
+        </Grid>
+    </StackPanel>
 </UserControl>
