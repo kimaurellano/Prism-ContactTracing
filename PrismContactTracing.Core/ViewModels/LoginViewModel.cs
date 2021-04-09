@@ -1,9 +1,8 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using MySql.Data.MySqlClient;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using PrismContactTracing.Core.Interface;
-using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,14 +53,24 @@ namespace PrismContactTracing.Core.ViewModels {
                     return string.Empty;
                 }
 
-                SqliteCommand cmd = new SqliteCommand("select count(*) from user where username=$username and password=$password", _dbConnector.DbConnectionInstance);
-                cmd.Parameters.AddWithValue("$username", Username);
-                cmd.Parameters.AddWithValue("$password", value.Password);
-                var firstColumn = cmd.ExecuteScalar().ToString();
+                MySqlCommand cmd = new MySqlCommand("GetUser", _dbConnector.DbConnectionInstance) {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
 
+                cmd.Parameters.AddWithValue("@m_username", Username);
+                cmd.Parameters.AddWithValue("@m_password", value.Password);
+                cmd.Parameters.Add("@totalcount", MySqlDbType.Int32);
+                cmd.Parameters["@totalcount"].Direction = System.Data.ParameterDirection.Output;
+                cmd.ExecuteNonQuery();
+
+                int count = (int)cmd.Parameters["@totalcount"].Value;
+
+                cmd.Dispose();
                 _dbConnector.Disconnect();
 
-                if (firstColumn == "0") {
+                if (count == 0) {
+                    IsVisible = 0;
+
                     MessageBox.Show("Invalid credentials", "Login error", MessageBoxButton.OK);
                     return string.Empty;
                 }
