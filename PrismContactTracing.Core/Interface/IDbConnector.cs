@@ -1,8 +1,8 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using MySql.Data.MySqlClient;
 
 namespace PrismContactTracing.Core.Interface {
     public interface IDbConnector {
-        public SqliteConnection DbConnectionInstance { get; set; }
+        public MySqlConnection DbConnectionInstance { get; set; }
         public bool Connect();
         public void Disconnect();
     }
