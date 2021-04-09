@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using MySql.Data.MySqlClient;
 using PrismContactTracing.Core.Interface;
 using System.Data;
 
@@ -21,7 +22,7 @@ namespace PrismContactTracing.Core.DataComponent {
             _dataTable = new DataTable();
             _dataTable = _ds.Tables.Add("MainTable");
 
-            SqliteCommand command = new SqliteCommand(Query + ";", _dbConnector.DbConnectionInstance);
+            MySqlCommand command = new MySqlCommand(Query + ";", _dbConnector.DbConnectionInstance);
             command.ExecuteNonQuery();
             command.Dispose();
 
