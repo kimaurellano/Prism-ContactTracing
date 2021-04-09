@@ -28,6 +28,8 @@ namespace PrismContactTracing.Core {
 
             ViewModelLocationProvider.Register<LoginView, LoginViewModel>();
             ViewModelLocationProvider.Register<HomeView, HomeViewModel>();
+            ViewModelLocationProvider.Register<ResidentReportView, ResidentReportViewModel>();
+            ViewModelLocationProvider.Register<ResidentListView, ResidentListViewModel>();
         }
     }
 }
