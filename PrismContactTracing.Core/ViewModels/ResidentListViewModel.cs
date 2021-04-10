@@ -1,6 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using PrismContactTracing.Core.DataComponent;
+using PrismContactTracing.Core.Listener;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
@@ -10,6 +12,8 @@ using System.Windows.Input;
 
 namespace PrismContactTracing.Core.ViewModels {
     public class ResidentListViewModel : BindableBase {
+
+        private IDataListener _dataListener;
         private DataTable _mainTable;
         private Cursor _cursorType;
         private string _residentName;
@@ -47,6 +51,7 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand<object> ExecuteLoadResidentsReportCommand { get; private set; }
         public DelegateCommand ExecuteGenericDelegateOpenDialogCommand { get; private set; }
         public DelegateCommand ExecuteIsEnableEditCommand { get; private set; }
+        public DelegateCommand ExecuteRecordArchiveCommand { get; private set; }
         public DelegateCommand ExecuteInsertCommand { get; private set; }
 
         public DataTable MainDataTable {
@@ -109,15 +114,26 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _notifTransform, value); }
         }
 
-        public ResidentListViewModel() {
+        public ResidentListViewModel(IDataListener dataListener) {
+            _dataListener = dataListener;
+            _dataListener.Procedure = "GetResidentsList";
+            _dataListener.StartListen();
+
+            DataListener.OnTableChangeEvent += RefreshTable;
+
             Task.Run(() => LoadResidentList(string.Empty));
 
+            ExecuteRecordArchiveCommand = new DelegateCommand(async () => await ArchiveRecord());
             ExecuteInsertCommand = new DelegateCommand(async () => await InsertResident());
             ExecuteRegistrationDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
             ExecuteApplyUpdateCommand = new DelegateCommand(UpdateDb);
             ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentList(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentList(string.Empty));
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
+        }
+
+        private Task ArchiveRecord() {
+            throw new NotImplementedException();
         }
 
         /// <param name="resident">Empty value will get all rows else otherwise</param>
@@ -195,19 +211,23 @@ namespace PrismContactTracing.Core.ViewModels {
 
             Application.Current.Dispatcher.Invoke(async () => {
                 await Task.Run(() => {
-                    while (NotifTransform > -30f) {
+                    while (NotifTransform > -10f) {
                         NotifTransform -= 1f;
                         Thread.Sleep(1);
                     }
 
                     Thread.Sleep(time);
 
-                    while (NotifTransform < 250f) {
+                    while (NotifTransform < 200f) {
                         NotifTransform += 1f;
                         Thread.Sleep(1);
                     }
                 });
             });
+        }
+
+        private void RefreshTable() {
+            Task.Run(() => LoadResidentList(string.Empty));
         }
     }
 }
