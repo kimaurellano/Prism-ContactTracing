@@ -1,10 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using PrismContactTracing.Core.Interface;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
 namespace PrismContactTracing.Core.DataComponent {
     public class UpdateQuery : IQueryStrategy {
@@ -21,7 +17,7 @@ namespace PrismContactTracing.Core.DataComponent {
         public DataTable DoQuery() {
             _dbConnector.Connect();
 
-            // Populates DataSet with records from the server
+            // Which stored procedure to use for retrieving data from server
             MySqlDataAdapter adapter = new MySqlDataAdapter() {
                 SelectCommand = new MySqlCommand(Procedure, _dbConnector.DbConnectionInstance) { 
                     CommandType = CommandType.StoredProcedure
@@ -29,6 +25,8 @@ namespace PrismContactTracing.Core.DataComponent {
             };
 
             DataTable serverTable = new DataTable("TempTable");
+
+            // Populates DataTable with records from the server
             adapter.Fill(serverTable);
 
             // Do updates
@@ -54,6 +52,7 @@ namespace PrismContactTracing.Core.DataComponent {
                 for (int j = 0; j < target.Columns.Count; j++) {
                     string sourceData = source.Rows[i].ItemArray[j].ToString();
                     string targetData = target.Rows[i].ItemArray[j].ToString();
+                    // The cell in a row has changes
                     if(sourceData != targetData) {
                         source.Rows[i][source.Columns[j].ColumnName] = targetData;
                     }

@@ -21,14 +21,14 @@ namespace PrismContactTracing.Core.ViewModels {
         private string _contactNumber;
         private string _eName;
         private string _eContact;
-        private float _notifTransform = 110f;
+        private float _notifTransform = 500f;
         private string _notifMessage;
         private bool _isDialogOpen = false;
         private bool _isEnableEdit = false;
         private bool _isSavingEnable = false;
         private bool _onResidentReportLoaded = true; // To identify which table is displayed then apply proper filter through search input
-        private Visibility _isVisible;
         private float _spinnerEnable = 0f;
+        private Visibility _isVisible;
 
         public string FirstName { get => _firstName; set { SetProperty(ref _firstName, value); } }
         public string LastName { get => _lastName; set => _lastName = value; }
@@ -99,12 +99,12 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _cursorType, value); }
         }
 
-        public virtual string NotifMessage {
+        public string NotifMessage {
             get => _notifMessage;
             set { SetProperty(ref _notifMessage, value); }
         }
 
-        public virtual float NotifTransform {
+        public float NotifTransform {
             get => _notifTransform;
             set { SetProperty(ref _notifTransform, value); }
         }
@@ -190,19 +190,19 @@ namespace PrismContactTracing.Core.ViewModels {
             Show("Updated successfully", 3000);
         }
 
-        public virtual void Show(string message, int time) {
+        public void Show(string message, int time) {
             NotifMessage = message;
 
             Application.Current.Dispatcher.Invoke(async () => {
                 await Task.Run(() => {
-                    while (NotifTransform > -30) {
+                    while (NotifTransform > -30f) {
                         NotifTransform -= 1f;
                         Thread.Sleep(1);
                     }
 
                     Thread.Sleep(time);
 
-                    while (NotifTransform < 110f) {
+                    while (NotifTransform < 250f) {
                         NotifTransform += 1f;
                         Thread.Sleep(1);
                     }

@@ -23,9 +23,9 @@ namespace PrismContactTracing.Core.DataComponent {
         public DataTable DoQuery() {
             _dbConnector.Connect();
 
-            DataSet _ds = new DataSet("MainDataset");
+            DataSet dataset = new DataSet("MainDataset");
             _dataTable = new DataTable();
-            _dataTable = _ds.Tables.Add("MainTable");
+            _dataTable = dataset.Tables.Add("MainTable");
 
             MySqlCommand command = new MySqlCommand(Procedure, _dbConnector.DbConnectionInstance) { 
                 CommandType = CommandType.StoredProcedure

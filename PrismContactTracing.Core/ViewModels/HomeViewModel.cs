@@ -21,7 +21,6 @@ namespace PrismContactTracing.Core.ViewModels {
             }
 
             page = page.Replace("View", string.Empty);
-            //CurrentPage = $"Your viewing {page}";
         }
     }
 }
