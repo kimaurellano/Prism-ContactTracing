@@ -22,71 +22,85 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <StackPanel Style="{StaticResource MainBG}" Orientation="Horizontal">
-        <Grid Width="328" HorizontalAlignment="Left"
-              Margin="0,0,10,0">
-            <StackPanel Orientation="Vertical" Height="1080" VerticalAlignment="Center">
-                <TextBlock Text="DASHBOARD" 
-                       Foreground="White" 
-                       FontSize="32"
-                       FontFamily="Montserrat SemiBold" 
-                       FontWeight="Regular" 
-                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        Content="ADMIN"
-                        Height="45"
-                        Foreground="#23765A"
-                        TextBlock.FontFamily="Montserrat Semibold"
-                        TextBlock.FontSize="20"
-                        materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,10,20,0"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        Content="RESIDENTS"
-                        Height="45"
-                        Foreground="#23765A"
-                        TextBlock.FontFamily="Montserrat Semibold"
-                        TextBlock.FontSize="20"
-                        materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,15,20,0"
-                        Command="{Binding NavigateToCommand}" CommandParameter="ResidentListView"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        Content="REPORT"
-                        Height="45"
-                        Foreground="#23765A"
-                        TextBlock.FontFamily="Montserrat Semibold"
-                        TextBlock.FontSize="20"
-                        materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,15,20,0"
-                        Command="{Binding NavigateToCommand}" CommandParameter="ResidentReportView"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        Content="LOG OUT"
-                        Height="45"
-                        Foreground="#23765A"
-                        TextBlock.FontFamily="Montserrat Semibold"
-                        TextBlock.FontSize="20"
-                        materialDesign:ButtonAssist.CornerRadius="25"
-                        Background="White" Margin="20,620,20,0"/>
-                <TextBlock Text="01/01/2021"
-                           FontFamily="Montserrat Semibold"
-                           FontSize="17"
-                           HorizontalAlignment="Left"
-                           Margin="20,25,0,0"
-                           Foreground="White"/>
-                <TextBlock Text="07:00 AM"
-                           FontFamily="Montserrat Semibold"
-                           FontSize="32"
-                           HorizontalAlignment="Left"
-                           Margin="20,0,0,0"
-                           Foreground="White"/>
-            </StackPanel>
-        </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Style="{StaticResource MainBG}"
+                    Orientation="Horizontal">
+            <Grid Width="328"
+                  HorizontalAlignment="Left"
+                  Margin="0,0,10,0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="DASHBOARD"
+                               Foreground="White"
+                               FontSize="32"
+                               FontFamily="Montserrat SemiBold"
+                               FontWeight="Regular"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
+                               Margin="0,50,0,0" />
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                            Content="ADMIN"
+                            Height="45"
+                            Foreground="#23765A"
+                            TextBlock.FontFamily="Montserrat Semibold"
+                            TextBlock.FontSize="20"
+                            Background="White"
+                            Margin="20,10,20,0" />
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                            Content="RESIDENTS"
+                            Height="45"
+                            Foreground="#23765A"
+                            TextBlock.FontFamily="Montserrat Semibold"
+                            TextBlock.FontSize="20"
+                            Background="White"
+                            Margin="20,15,20,0"
+                            Command="{Binding NavigateToCommand}"
+                            CommandParameter="ResidentListView" />
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                            Content="REPORT"
+                            Height="45"
+                            Foreground="#23765A"
+                            TextBlock.FontFamily="Montserrat Semibold"
+                            TextBlock.FontSize="20"
+                            Background="White"
+                            Margin="20,15,20,0"
+                            Command="{Binding NavigateToCommand}"
+                            CommandParameter="ResidentReportView" />
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                            Content="LOG OUT"
+                            Height="45"
+                            Foreground="#23765A"
+                            TextBlock.FontFamily="Montserrat Semibold"
+                            TextBlock.FontSize="20"
+                            Background="White"
+                            Margin="20,620,20,0" />
+                    <TextBlock Text="01/01/2021"
+                               FontFamily="Montserrat Semibold"
+                               FontSize="17"
+                               HorizontalAlignment="Left"
+                               Margin="20,25,0,0"
+                               Foreground="White" />
+                    <TextBlock Text="07:00 AM"
+                               FontFamily="Montserrat Semibold"
+                               FontSize="32"
+                               HorizontalAlignment="Left"
+                               Margin="20,0,0,0"
+                               Foreground="White" />
+                </StackPanel>
+            </Grid>
 
-        <!--DataGrid container-->
-        <ContentControl prism:RegionManager.RegionName="ContentType" Height="1072" Width="1180"/>
+            <!--DataGrid container-->
+            <ContentControl prism:RegionManager.RegionName="ContentType"
+                            Width="1180" />
 
-        <!--Live person scan container-->
-        <Grid Margin="10,90,10,0" Height="450" Width="375" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Border CornerRadius="10" Background="White"></Border>
-        </Grid>
-    </StackPanel>
+            <!--Live person scan container-->
+            <Grid Margin="10,90,10,0"
+                  Height="450"
+                  Width="375"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top">
+                <Border CornerRadius="10"
+                        Background="White"></Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
