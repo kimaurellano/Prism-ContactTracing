@@ -13,7 +13,7 @@
              d:DesignHeight="900"
              d:DesignWidth="1157">
     <Grid>
-        <materialDesign:DialogHost IsOpen="{Binding IsDialogOpen}"
+        <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
                                    CloseOnClickAway="True"
                                    HorizontalAlignment="Stretch">
             <materialDesign:DialogHost.DialogContent>
@@ -197,24 +197,47 @@
                 <Grid Height="790">
                     <DataGrid x:Name="MainGrid"
                               ItemsSource="{Binding MainDataTable}"
+                              SelectedItem="{Binding ResidentDataRowView}"
                               IsReadOnly="False"
                               CanUserAddRows="False"
-                              SelectedItem="{Binding ResidentDataRowView}"
                               SelectionMode="Extended"
                               SelectionUnit="FullRow"
-                              Cursor="{Binding CursorType}" />
+                              Cursor="{Binding CursorType}"/>
                 </Grid>
             </StackPanel>
         </materialDesign:DialogHost>
-        <fa:ImageAwesome Icon="CircleOutlineNotch"
-                         Spin="True"
-                         Opacity="{Binding SpinnerEnable}"
-                         SpinDuration="2"
-                         Height="50"
-                         Width="50"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Center"
-                         Foreground="#000000" />
+        <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
+                                   HorizontalAlignment="Stretch"
+                                   CloseOnClickAway="True">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="10" Width="150" Height="90">
+                    <TextBlock HorizontalAlignment="Center" Text="Do you want to archive?" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,10,0,0">
+                        <Button IsDefault="True"
+                                Margin="0,10,10,0"
+                                Content="YES"
+                                Command="{Binding ExecuteArchiveResidentCommand}"
+                                Foreground="Green">
+                            <Button.CommandParameter>
+                                <system:Boolean>True</system:Boolean>
+                            </Button.CommandParameter>
+                        </Button>
+
+                        <Button IsCancel="True"
+                                Margin="0,10,0,0"
+                                Content="NO"
+                                Command="materialDesign:DialogHost.CloseDialogCommand">
+                            <Button.CommandParameter>
+                                <system:Boolean>False</system:Boolean>
+                            </Button.CommandParameter>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
         <materialDesign:Card UniformCornerRadius="25"
                              Width="200"
                              Height="50"
@@ -243,7 +266,8 @@
                 Foreground="#FF23765A"
                 VerticalAlignment="Top"
                 Width="140"
-                Margin="601,800,416,0" />
+                Margin="601,800,416,0"
+                Command="{Binding ExecuteShowConfirmDialogCommand}"/>
         <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
                 FontFamily="Montserrat"
                 Height="50"
@@ -264,5 +288,15 @@
                 Foreground="#FF23765A"
                 VerticalAlignment="Top"
                 Margin="932,800,75,0" />
+        <fa:ImageAwesome Icon="CircleOutlineNotch"
+                         Spin="True"
+                         Opacity="{Binding SpinnerEnable}"
+                         SpinDuration="2"
+                         Height="25"
+                         Width="25"
+                         VerticalAlignment="Top"
+                         HorizontalAlignment="Left"
+                         Foreground="#000000"
+                         Margin="50,825,0,0" />
     </Grid>
 </UserControl>

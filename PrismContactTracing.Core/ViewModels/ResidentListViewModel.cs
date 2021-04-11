@@ -14,8 +14,10 @@ namespace PrismContactTracing.Core.ViewModels {
     public class ResidentListViewModel : BindableBase {
 
         private IDataListener _dataListener;
+        private DataRowView _residentDataRowView;
         private DataTable _mainTable;
         private Cursor _cursorType;
+        private string _residentId;
         private string _residentName;
         private string _firstName;
         private string _lastName;
@@ -33,7 +35,10 @@ namespace PrismContactTracing.Core.ViewModels {
         private bool _onResidentReportLoaded = true; // To identify which table is displayed then apply proper filter through search input
         private float _spinnerEnable = 0f;
         private Visibility _isVisible;
+        private bool _isRegisterDialogOpen;
+        private bool _showConfirmDialog;
 
+        public string ResidentId { get => _residentId; set { SetProperty(ref _residentId, value); } }
         public string FirstName { get => _firstName; set { SetProperty(ref _firstName, value); } }
         public string LastName { get => _lastName; set => _lastName = value; }
         public string IdNumber { get => _idNumber; set => _idNumber = value; }
@@ -51,7 +56,8 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand<object> ExecuteLoadResidentsReportCommand { get; private set; }
         public DelegateCommand ExecuteGenericDelegateOpenDialogCommand { get; private set; }
         public DelegateCommand ExecuteIsEnableEditCommand { get; private set; }
-        public DelegateCommand ExecuteRecordArchiveCommand { get; private set; }
+        public DelegateCommand ExecuteArchiveResidentCommand { get; private set; }
+        public DelegateCommand ExecuteShowConfirmDialogCommand { get; private set; }
         public DelegateCommand ExecuteInsertCommand { get; private set; }
 
         public DataTable MainDataTable {
@@ -73,9 +79,14 @@ namespace PrismContactTracing.Core.ViewModels {
             }
         }
 
-        public bool IsDialogOpen {
-            get => _isDialogOpen;
-            set { SetProperty(ref _isDialogOpen, value); }
+        public bool ShowConfirmDialog {
+            get => _showConfirmDialog;
+            set { SetProperty(ref _showConfirmDialog, value); }
+        }
+
+        public bool IsRegisterDialogOpen {
+            get => _isRegisterDialogOpen;
+            set { SetProperty(ref _isRegisterDialogOpen, value); }
         }
 
         public Visibility IsVisible {
@@ -114,6 +125,11 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _notifTransform, value); }
         }
 
+        public DataRowView ResidentDataRowView {
+            get => _residentDataRowView;
+            set { SetProperty(ref _residentDataRowView, value); }
+        }
+
         public ResidentListViewModel(IDataListener dataListener) {
             _dataListener = dataListener;
             _dataListener.Procedure = "GetResidentsList";
@@ -123,17 +139,32 @@ namespace PrismContactTracing.Core.ViewModels {
 
             Task.Run(() => LoadResidentList(string.Empty));
 
-            ExecuteRecordArchiveCommand = new DelegateCommand(async () => await ArchiveRecord());
+            ExecuteArchiveResidentCommand = new DelegateCommand(async () => await ArchiveRecord());
+            ExecuteShowConfirmDialogCommand = new DelegateCommand(() => { ShowConfirmDialog = !ShowConfirmDialog; });
             ExecuteInsertCommand = new DelegateCommand(async () => await InsertResident());
-            ExecuteRegistrationDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
+            ExecuteRegistrationDialogCommand = new DelegateCommand(() => { IsRegisterDialogOpen = !IsRegisterDialogOpen; });
             ExecuteApplyUpdateCommand = new DelegateCommand(UpdateDb);
             ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentList(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentList(string.Empty));
-            ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
+            ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsRegisterDialogOpen = !IsRegisterDialogOpen; });
         }
 
-        private Task ArchiveRecord() {
-            throw new NotImplementedException();
+        private async Task ArchiveRecord() {
+            await Task.Run(() => {
+                ShowConfirmDialog = !ShowConfirmDialog;
+
+                List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>> {
+                    new KeyValuePair<string, string>("@m_key", _residentDataRowView.Row["Resident Id"].ToString())
+                };
+
+                QueryStrategy queryStrategy = new QueryStrategy();
+                queryStrategy.SetQuery(new ArchiveQuery() {
+                    Procedure = "ArchiveResident",
+                    Parameters = parameter
+                });
+
+                Task.Run(() => LoadResidentList(string.Empty));
+            });
         }
 
         /// <param name="resident">Empty value will get all rows else otherwise</param>
@@ -176,7 +207,7 @@ namespace PrismContactTracing.Core.ViewModels {
             await Task.Run(() => {
                 SpinnerEnable = 1f;
 
-                IsDialogOpen = !IsDialogOpen;
+                IsRegisterDialogOpen = !IsRegisterDialogOpen;
 
                 List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
                 parameter.Add(new KeyValuePair<string, string>("@m_firstname", _firstName));
