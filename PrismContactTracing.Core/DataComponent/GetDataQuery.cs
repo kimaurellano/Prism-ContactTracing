@@ -49,9 +49,12 @@ namespace PrismContactTracing.Core.DataComponent {
                 if (Procedure == "GetResident" || Procedure == "GetResidentsList") {
                     _dataTable.Columns.Add("Mark for archive", typeof(bool));
                     _dataTable.Columns["Mark for archive"].DefaultValue = false;
-                } else if (Procedure.Contains("GetArchive")){
+                } else if (Procedure.Contains("GetArchive")) {
                     _dataTable.Columns.Add("Mark for restore", typeof(bool));
                     _dataTable.Columns["Mark for restore"].DefaultValue = false;
+                } else if(Procedure == "GetAdmins") {
+                    _dataTable.Columns.Add("Mark for delete", typeof(bool));
+                    _dataTable.Columns["Mark for delete"].DefaultValue = false;
                 }
 
                 while (reader.Read()) {

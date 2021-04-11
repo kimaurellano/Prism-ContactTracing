@@ -203,7 +203,8 @@
                               CanUserAddRows="False"
                               SelectionMode="Extended"
                               SelectionUnit="FullRow"
-                              Cursor="{Binding CursorType}" />
+                              Cursor="{Binding CursorType}" 
+                              CanUserResizeRows="False"/>
                 </Grid>
             </StackPanel>
         </materialDesign:DialogHost>

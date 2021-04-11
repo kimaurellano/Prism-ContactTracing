@@ -123,8 +123,7 @@ namespace PrismContactTracing.Core.ViewModels {
             //Start read serial data
 
             _dataListener = dataListener;
-            _dataListener.Procedure = "GetResidentsList";
-            _dataListener.StartListen();
+            _dataListener.StartDbChangesListener();
 
             DataListener.OnTableChangeEvent += RefreshTable;
 
@@ -158,7 +157,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 }
                 
                 QueryStrategy queryStrategy = new QueryStrategy();
-                queryStrategy.SetQuery(new SelectQuery() {
+                queryStrategy.SetQuery(new GetDataQuery() {
                     Procedure = resident == string.Empty || resident == null ? "GetResidentsReport" : "GetResidentReport",
                     Parameters = parameter
                 });
@@ -188,7 +187,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_time_in", timeIn));
 
                 QueryStrategy queryStrategy = new QueryStrategy();
-                queryStrategy.SetQuery(new SelectQuery() {
+                queryStrategy.SetQuery(new GetDataQuery() {
                     Procedure = timeIn == string.Empty ? "GetCloseContactTraces" : "GetCloseContactTrace",
                     Parameters = parameter
                 });

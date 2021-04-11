@@ -7,9 +7,9 @@ using System.Xml.Linq;
 namespace PrismContactTracing.Core.DataComponent {
     public class DbConnector : IDbConnector {
 
-        public MySqlConnection DbConnectionInstance { get; set; }
-
         private string _connection;
+
+        public MySqlConnection DbConnectionInstance { get; set; }
 
         public DbConnector() {
             string res = string.Empty;

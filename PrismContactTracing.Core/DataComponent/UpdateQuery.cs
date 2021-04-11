@@ -8,6 +8,10 @@ namespace PrismContactTracing.Core.DataComponent {
         private DbConnector _dbConnector;
 
         public string Procedure { get; set; }
+
+        /// <summary>
+        /// Table to be compared against server table
+        /// </summary>
         public DataTable TargetDataTable { get; set; }
 
         public UpdateQuery() {
