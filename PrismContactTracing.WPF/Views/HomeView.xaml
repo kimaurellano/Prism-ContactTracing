@@ -50,7 +50,9 @@
                             TextBlock.FontFamily="Montserrat Semibold"
                             TextBlock.FontSize="20"
                             Background="White"
-                            Margin="20,10,20,0" />
+                            Margin="20,10,20,0"
+                            Command="{Binding NavigateToCommand}"
+                            CommandParameter="AdminView" />
                     <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
                             Content="RESIDENTS"
                             Height="45"

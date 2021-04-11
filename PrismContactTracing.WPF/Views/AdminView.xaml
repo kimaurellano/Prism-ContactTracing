@@ -1,0 +1,280 @@
+﻿<UserControl x:Class="PrismContactTracing.WPF.Views.AdminView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PrismContactTracing.WPF.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d"
+             d:DesignHeight="900"
+             d:DesignWidth="1157">
+    <Grid>
+        <!-- Registration -->
+        <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
+                                   CloseOnClickAway="True"
+                                   HorizontalAlignment="Stretch">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel x:Name="Test"
+                            Background="White"
+                            Margin="20,20,20,50"
+                            Orientation="Vertical">
+                    <TextBlock Text="New resident"
+                               FontFamily="Montserrat Semibold"
+                               FontSize="24"
+                               HorizontalAlignment="Left"
+                               Margin="15,0,0,0" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <TextBox Text="{Binding Username, Mode=TwoWay}"
+                                 Style="{DynamicResource MaterialDesignFilledTextBox}"
+                                 materialDesign:HintAssist.Hint="Username"
+                                 materialDesign:HintAssist.FloatingScale="0.8"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 materialDesign:HintAssist.Foreground="Black"
+                                 Foreground="Black"
+                                 HorizontalAlignment="Left"
+                                 FontFamily="Montserrat"
+                                 FontSize="18"
+                                 MinHeight="50"
+                                 Height="60"
+                                 Width="397"
+                                 Margin="0,50,70,0" />
+                        <TextBox Text="{Binding Password, Mode=TwoWay}"
+                                 Style="{DynamicResource MaterialDesignFilledTextBox}"
+                                 materialDesign:HintAssist.Hint="Password"
+                                 materialDesign:HintAssist.FloatingScale="0.8"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 materialDesign:HintAssist.Foreground="Black"
+                                 Foreground="Black"
+                                 HorizontalAlignment="Right"
+                                 FontFamily="Montserrat"
+                                 FontSize="18"
+                                 MinHeight="50"
+                                 Height="60"
+                                 Width="397"
+                                 Margin="0,50,0,0" />
+                    </StackPanel>
+                    <TextBox Text="{Binding Level, Mode=TwoWay}"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}"
+                             materialDesign:HintAssist.Hint="Level"
+                             materialDesign:HintAssist.FloatingScale="0.8"
+                             materialDesign:HintAssist.IsFloating="True"
+                             materialDesign:HintAssist.HelperTextFontSize="20"
+                             materialDesign:HintAssist.Foreground="Black"
+                             Foreground="Black"
+                             HorizontalAlignment="Center"
+                             FontFamily="Montserrat"
+                             FontSize="18"
+                             MinHeight="50"
+                             Height="60"
+                             Width="863"
+                             Margin="0,50,0,0" />
+                    <TextBox Text="{Binding Address, Mode=TwoWay}"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}"
+                             materialDesign:HintAssist.Hint="Address"
+                             materialDesign:HintAssist.FloatingScale="0.8"
+                             materialDesign:HintAssist.IsFloating="True"
+                             materialDesign:HintAssist.HelperTextFontSize="20"
+                             materialDesign:HintAssist.Foreground="Black"
+                             Foreground="Black"
+                             HorizontalAlignment="Center"
+                             FontFamily="Montserrat"
+                             FontSize="18"
+                             MinHeight="50"
+                             Height="60"
+                             Width="863"
+                             Margin="0,50,0,0" />
+                    <TextBox Text="{Binding ContactNumber, Mode=TwoWay}"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}"
+                             materialDesign:HintAssist.Hint="Contact number"
+                             materialDesign:HintAssist.FloatingScale="0.8"
+                             materialDesign:HintAssist.IsFloating="True"
+                             materialDesign:HintAssist.HelperTextFontSize="20"
+                             materialDesign:HintAssist.Foreground="Black"
+                             Foreground="Black"
+                             HorizontalAlignment="Center"
+                             FontFamily="Montserrat"
+                             FontSize="18"
+                             MinHeight="50"
+                             Height="60"
+                             Width="863"
+                             Margin="0,50,0,0" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <TextBox Text="{Binding FirstName, Mode=TwoWay}"
+                                 Style="{DynamicResource MaterialDesignFilledTextBox}"
+                                 materialDesign:HintAssist.Hint="First Name"
+                                 materialDesign:HintAssist.FloatingScale="0.8"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 materialDesign:HintAssist.Foreground="Black"
+                                 Foreground="Black"
+                                 HorizontalAlignment="Left"
+                                 FontFamily="Montserrat"
+                                 FontSize="18"
+                                 MinHeight="50"
+                                 Height="60"
+                                 Width="397"
+                                 Margin="0,30,70,0" />
+                        <TextBox Text="{Binding LastName, Mode=TwoWay}"
+                                 Style="{DynamicResource MaterialDesignFilledTextBox}"
+                                 materialDesign:HintAssist.Hint="Last Name"
+                                 materialDesign:HintAssist.FloatingScale="0.8"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 materialDesign:HintAssist.Foreground="Black"
+                                 Foreground="Black"
+                                 HorizontalAlignment="Right"
+                                 FontFamily="Montserrat"
+                                 FontSize="18"
+                                 MinHeight="50"
+                                 Height="60"
+                                 Width="397"
+                                 Margin="0,30,0,0" />
+                    </StackPanel>
+                    <Button Content="Submit"
+                            Command="{Binding ExecuteInsertCommand}"
+                            Margin="0,30,0,0"
+                            Width="200"
+                            Height="50" />
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+            <StackPanel Orientation="Vertical">
+                <Grid Margin="10,50,10,10">
+                    <TextBlock Text="Admin list"
+                               Foreground="White"
+                               FontSize="18"
+                               FontFamily="Montserrat SemiBold"
+                               FontWeight="Regular"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Right" />
+                </Grid>
+                <Grid Height="790">
+                    <DataGrid x:Name="MainGrid"
+                              ItemsSource="{Binding MainDataTable}"
+                              SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
+                              IsReadOnly="False"
+                              CanUserAddRows="False"
+                              SelectionMode="Extended"
+                              SelectionUnit="FullRow"
+                              Cursor="{Binding CursorType}"
+                              CanUserResizeRows="False" />
+                </Grid>
+            </StackPanel>
+        </materialDesign:DialogHost>
+        <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
+                                   HorizontalAlignment="Stretch"
+                                   CloseOnClickAway="True">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="10"
+                            Width="150"
+                            Height="90">
+                    <TextBlock HorizontalAlignment="Center"
+                               Text="Do you want to delete?" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,10,0,0">
+                        <Button IsDefault="True"
+                                Margin="0,10,10,0"
+                                Content="YES"
+                                Command="{Binding ExecuteDeleteAdminCommand}"
+                                Foreground="Green">
+                            <Button.CommandParameter>
+                                <system:Boolean>True</system:Boolean>
+                            </Button.CommandParameter>
+                        </Button>
+
+                        <Button IsCancel="True"
+                                Margin="0,10,0,0"
+                                Content="NO"
+                                Command="materialDesign:DialogHost.CloseDialogCommand">
+                            <Button.CommandParameter>
+                                <system:Boolean>False</system:Boolean>
+                            </Button.CommandParameter>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+        <materialDesign:Card UniformCornerRadius="25"
+                             Width="200"
+                             Height="50"
+                             materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                             VerticalAlignment="Bottom"
+                             Margin="0,0,0,50"
+                             RenderTransformOrigin="0.5,0.5">
+            <materialDesign:Card.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform Y="{Binding NotifTransform}" />
+                </TransformGroup>
+            </materialDesign:Card.RenderTransform>
+            <Grid>
+                <TextBlock Text="{Binding NotifMessage}"
+                           FontFamily="Montserrat Semibold"
+                           FontSize="13"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </Grid>
+        </materialDesign:Card>
+        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Content="Delete"
+                Background="White"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Width="140"
+                Margin="601,800,416,0"
+                Command="{Binding ExecuteShowConfirmDialogCommand}" />
+        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Width="150"
+                Content="Update"
+                Background="White"
+                Command="{Binding ExecuteApplyUpdateCommand}"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Margin="760,800,247,0" />
+        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Width="150"
+                Content="Register"
+                Background="White"
+                Command="{Binding ExecuteRegistrationDialogCommand}"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Margin="932,800,75,0" />
+        <fa:ImageAwesome Icon="CircleOutlineNotch"
+                         Spin="True"
+                         Opacity="{Binding SpinnerEnable}"
+                         SpinDuration="2"
+                         Height="25"
+                         Width="25"
+                         VerticalAlignment="Top"
+                         HorizontalAlignment="Left"
+                         Foreground="#000000"
+                         Margin="50,825,0,0" />
+        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="0,0,50,175"
+                Background="#DEDEDE"
+                Command="{Binding ExecuteRefreshCommand}">
+            <materialDesign:PackIcon Kind="Refresh"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Width="32"
+                                     Height="32"
+                                     Foreground="Black" />
+        </Button>
+    </Grid>
+</UserControl>
