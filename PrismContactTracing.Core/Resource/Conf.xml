@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <connectionstring>
-  <server>hidden</server>
+  <server>sql472.main-hosting.eu</server>
   <port>3306</port>
-  <uid>hidden</uid>
-  <pwd>hidden</pwd>
-  <database>hidden</database>
+  <uid>u317002873_root</uid>
+  <pwd>1234!Kim</pwd>
+  <database>u317002873_ContactTracing</database>
 </connectionstring>
