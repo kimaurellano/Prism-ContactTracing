@@ -197,12 +197,12 @@
                 <Grid Height="790">
                     <DataGrid x:Name="MainGrid"
                               ItemsSource="{Binding MainDataTable}"
-                              SelectedItem="{Binding ResidentDataRowView}"
+                              SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
                               IsReadOnly="False"
                               CanUserAddRows="False"
                               SelectionMode="Extended"
                               SelectionUnit="FullRow"
-                              Cursor="{Binding CursorType}"/>
+                              Cursor="{Binding CursorType}" />
                 </Grid>
             </StackPanel>
         </materialDesign:DialogHost>
@@ -210,8 +210,11 @@
                                    HorizontalAlignment="Stretch"
                                    CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
-                <StackPanel Margin="10" Width="150" Height="90">
-                    <TextBlock HorizontalAlignment="Center" Text="Do you want to archive?" />
+                <StackPanel Margin="10"
+                            Width="150"
+                            Height="90">
+                    <TextBlock HorizontalAlignment="Center"
+                               Text="Do you want to archive?" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -267,7 +270,7 @@
                 VerticalAlignment="Top"
                 Width="140"
                 Margin="601,800,416,0"
-                Command="{Binding ExecuteShowConfirmDialogCommand}"/>
+                Command="{Binding ExecuteShowConfirmDialogCommand}" />
         <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
                 FontFamily="Montserrat"
                 Height="50"
@@ -298,5 +301,18 @@
                          HorizontalAlignment="Left"
                          Foreground="#000000"
                          Margin="50,825,0,0" />
+        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="0,0,50,175"
+                Background="#DEDEDE"
+                Command="{Binding ExecuteRefreshCommand}">
+            <materialDesign:PackIcon Kind="Refresh"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Width="32"
+                                     Height="32"
+                                     Foreground="Black" />
+        </Button>
     </Grid>
 </UserControl>

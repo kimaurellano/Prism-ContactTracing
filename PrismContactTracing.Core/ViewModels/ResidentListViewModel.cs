@@ -56,6 +56,7 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand<object> ExecuteLoadResidentsReportCommand { get; private set; }
         public DelegateCommand ExecuteGenericDelegateOpenDialogCommand { get; private set; }
         public DelegateCommand ExecuteIsEnableEditCommand { get; private set; }
+        public DelegateCommand ExecuteRefreshCommand { get; private set; }
         public DelegateCommand ExecuteArchiveResidentCommand { get; private set; }
         public DelegateCommand ExecuteShowConfirmDialogCommand { get; private set; }
         public DelegateCommand ExecuteInsertCommand { get; private set; }
@@ -139,6 +140,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
             Task.Run(() => LoadResidentList(string.Empty));
 
+            ExecuteRefreshCommand = new DelegateCommand(RefreshTable);
             ExecuteArchiveResidentCommand = new DelegateCommand(async () => await ArchiveRecord());
             ExecuteShowConfirmDialogCommand = new DelegateCommand(() => { ShowConfirmDialog = !ShowConfirmDialog; });
             ExecuteInsertCommand = new DelegateCommand(async () => await InsertResident());
@@ -153,14 +155,10 @@ namespace PrismContactTracing.Core.ViewModels {
             await Task.Run(() => {
                 ShowConfirmDialog = !ShowConfirmDialog;
 
-                List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>> {
-                    new KeyValuePair<string, string>("@m_key", _residentDataRowView.Row["Resident Id"].ToString())
-                };
-
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new ArchiveQuery() {
-                    Procedure = "ArchiveResident",
-                    Parameters = parameter
+                    TargetDataTable = MainDataTable,
+                    Procedure = "ArchiveResident"
                 });
 
                 Task.Run(() => LoadResidentList(string.Empty));
@@ -230,7 +228,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void UpdateDb() {
             QueryStrategy queryStrategy = new QueryStrategy();
-            queryStrategy.SetQuery(new UpdateQuery() { Procedure = "GetResidentsList", TargetDataTable = MainDataTable});
+            queryStrategy.SetQuery(new UpdateQuery() { Procedure = "GetResidentsList" });
 
             Task.Run(() => LoadResidentList(string.Empty));
 

@@ -9,8 +9,7 @@ namespace PrismContactTracing.Core.DataComponent {
         private DbConnector _dbConnector;
 
         public string Procedure { get; set; }
-
-        public List<KeyValuePair<string, string>> Parameters { get; set; }
+        public DataTable TargetDataTable { get; set; }
 
         public ArchiveQuery() {
             _dbConnector = new DbConnector();
@@ -19,18 +18,26 @@ namespace PrismContactTracing.Core.DataComponent {
         public DataTable DoQuery() {
             _dbConnector.Connect();
 
-            MySqlCommand command = new MySqlCommand(Procedure, _dbConnector.DbConnectionInstance) {
-                CommandType = CommandType.StoredProcedure
-            };
-
-            if (Parameters.Count > 0) {
-                foreach (var parameter in Parameters) {
-                    command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+            // Get the difference between the server sourced data and the datagrid sourced data
+            List<string> residentKeys = new List<string>();
+            for (int i = 0; i < TargetDataTable.Rows.Count; i++) {
+                // Rows marked for delete
+                if ((bool)TargetDataTable.Rows[i].ItemArray[8]) {
+                    residentKeys.Add(TargetDataTable.Rows[i][TargetDataTable.Columns[0].ColumnName].ToString());
                 }
             }
 
-            command.ExecuteNonQuery();
-            command.Dispose();
+            // Do query for how many rows are changed
+            foreach (string key in residentKeys) {
+                MySqlCommand command = new MySqlCommand(Procedure, _dbConnector.DbConnectionInstance) {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                command.Parameters.AddWithValue("@m_key", key);
+
+                command.ExecuteNonQuery();
+                command.Dispose();
+            }
 
             return null;
         }

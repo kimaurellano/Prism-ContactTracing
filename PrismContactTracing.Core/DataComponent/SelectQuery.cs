@@ -47,6 +47,11 @@ namespace PrismContactTracing.Core.DataComponent {
                     _dataTable.Columns.Add(reader.GetName(i));
                 }
 
+                if(Procedure == "GetResident" || Procedure == "GetResidentsList") {
+                    _dataTable.Columns.Add("Mark for delete", typeof(bool));
+                    _dataTable.Columns["Mark for delete"].DefaultValue = false;
+                }
+
                 while (reader.Read()) {
                     var currentRow = _dataTable.NewRow();
                     for (int i = 0; i < columCount; i++) {
@@ -54,6 +59,7 @@ namespace PrismContactTracing.Core.DataComponent {
                             currentRow[i] = string.Empty;
                             continue;
                         }
+
                         currentRow[i] = reader.GetString(i);
                     }
 
