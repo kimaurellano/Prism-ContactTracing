@@ -1,9 +1,6 @@
-﻿using MySql.Data.MySqlClient;
-using PrismContactTracing.Core.DataComponent;
+﻿using PrismContactTracing.Core.DataComponent;
 using System.ComponentModel;
-using System.Data;
 using System.Threading;
-using System.Windows;
 
 namespace PrismContactTracing.Core.Listener {
     public class DataListener : IDataListener {
@@ -48,7 +45,7 @@ namespace PrismContactTracing.Core.Listener {
                 // Just cause an invoke
                 worker.ReportProgress(0, null);
 
-                Thread.Sleep(10000);
+                Thread.Sleep(60000);
             }
         }
 
