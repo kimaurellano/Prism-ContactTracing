@@ -1,0 +1,151 @@
+﻿<UserControl x:Class="PrismContactTracing.WPF.Views.ArchiveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PrismContactTracing.WPF.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d"
+             d:DesignHeight="900"
+             d:DesignWidth="1157">
+    <Grid>
+        <Grid>
+            <!-- Registration -->
+            <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
+                                       CloseOnClickAway="True"
+                                       HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical">
+                    <Grid Margin="10,50,10,10">
+                        <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                                materialDesign:ButtonAssist.CornerRadius="15"
+                                Height="35"
+                                Width="100"
+                                Background="White"
+                                HorizontalAlignment="Left"
+                                Content="Search"
+                                Foreground="#23765A"
+                                FontSize="18"
+                                Visibility="{Binding IsVisible}"
+                                Command="{Binding ExecuteLoadArchivesCommand}"
+                                CommandParameter="{Binding ElementName=ResidentName}"
+                                RenderTransformOrigin="0.5,0.5">
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform />
+                                    <TranslateTransform X="280" />
+                                </TransformGroup>
+                            </Button.RenderTransform>
+                        </Button>
+                        <TextBox x:Name="ResidentName"
+                                 Text="{Binding ResidentName, Mode=TwoWay}"
+                                 Style="{DynamicResource MaterialDesignTextBox}"
+                                 materialDesign:HintAssist.Hint="Resident name"
+                                 materialDesign:HintAssist.FloatingScale="0.8"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 Foreground="#FFFFFF"
+                                 FontFamily="Montserrat"
+                                 FontSize="18"
+                                 MinHeight="50"
+                                 Height="50"
+                                 Width="267"
+                                 HorizontalAlignment="Left"
+                                 Visibility="{Binding IsVisible}" />
+                        <TextBlock Text="Archives"
+                                   Foreground="White"
+                                   FontSize="18"
+                                   FontFamily="Montserrat SemiBold"
+                                   FontWeight="Regular"
+                                   VerticalAlignment="Bottom"
+                                   HorizontalAlignment="Right" />
+                    </Grid>
+                    <Grid Height="790">
+                        <DataGrid x:Name="MainGrid"
+                                  ItemsSource="{Binding MainDataTable}"
+                                  SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
+                                  IsReadOnly="False"
+                                  CanUserAddRows="False"
+                                  SelectionMode="Extended"
+                                  SelectionUnit="FullRow"
+                                  Cursor="{Binding CursorType}" />
+                    </Grid>
+                </StackPanel>
+            </materialDesign:DialogHost>
+            <!-- Confirm dialog -->
+            <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
+                                       HorizontalAlignment="Stretch"
+                                       CloseOnClickAway="True">
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel Margin="10"
+                                Width="200"
+                                Height="90">
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="Do you want to restore record?" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="0,10,0,0">
+                            <Button IsDefault="True"
+                                    Margin="0,10,10,0"
+                                    Content="YES"
+                                    Command="{Binding ExecuteRestoreRecordCommand}"
+                                    Foreground="Green">
+                                <Button.CommandParameter>
+                                    <system:Boolean>True</system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+
+                            <Button IsCancel="True"
+                                    Margin="0,10,0,0"
+                                    Content="NO"
+                                    Command="materialDesign:DialogHost.CloseDialogCommand">
+                                <Button.CommandParameter>
+                                    <system:Boolean>False</system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+            </materialDesign:DialogHost>
+            <!-- Buttons on top -->
+            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                    FontFamily="Montserrat"
+                    Height="50"
+                    Width="150"
+                    Content="Restore"
+                    Background="White"
+                    Command="{Binding ExecuteRestoreDialogCommand}"
+                    Foreground="#FF23765A"
+                    VerticalAlignment="Top"
+                    Margin="932,800,75,0" />
+            <fa:ImageAwesome Icon="CircleOutlineNotch"
+                             Spin="True"
+                             Opacity="{Binding SpinnerEnable}"
+                             SpinDuration="2"
+                             Height="25"
+                             Width="25"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             Foreground="#000000"
+                             Margin="50,825,0,0" />
+            <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                    VerticalAlignment="Top"
+                    Margin="855,800,254,0"
+                    Background="#DEDEDE"
+                    Command="{Binding ExecuteRefreshCommand}">
+                <materialDesign:PackIcon Kind="Refresh"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"
+                                         Width="32"
+                                         Height="32"
+                                         Foreground="Black" />
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

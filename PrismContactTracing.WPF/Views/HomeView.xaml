@@ -72,13 +72,23 @@
                             Command="{Binding NavigateToCommand}"
                             CommandParameter="ResidentReportView" />
                     <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                            Content="ARCHIVE"
+                            Height="45"
+                            Foreground="#23765A"
+                            TextBlock.FontFamily="Montserrat Semibold"
+                            TextBlock.FontSize="20"
+                            Background="White"
+                            Margin="20,15,20,0"
+                            Command="{Binding NavigateToCommand}"
+                            CommandParameter="ArchiveView" />
+                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
                             Content="LOG OUT"
                             Height="45"
                             Foreground="#23765A"
                             TextBlock.FontFamily="Montserrat Semibold"
                             TextBlock.FontSize="20"
                             Background="White"
-                            Margin="20,620,20,0" />
+                            Margin="20,545,20,0" />
                     <TextBlock Text="{Binding RealTimeDateLog, Mode=TwoWay}"
                                FontFamily="Montserrat Semibold"
                                FontSize="17"
