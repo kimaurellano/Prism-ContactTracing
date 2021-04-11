@@ -29,6 +29,9 @@ namespace PrismContactTracing.Core.DataComponent {
             // Populates DataTable with records from the server
             adapter.Fill(serverTable);
 
+            // Avoid getting mark for archive column which causes index out of bounds during table comparison
+            TargetDataTable.Columns.RemoveAt(TargetDataTable.Columns.Count - 1);
+
             // Do updates
             serverTable = CompareTable(serverTable, TargetDataTable);
 
