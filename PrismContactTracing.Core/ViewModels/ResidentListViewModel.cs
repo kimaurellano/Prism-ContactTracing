@@ -29,10 +29,8 @@ namespace PrismContactTracing.Core.ViewModels {
         private string _eContact;
         private float _notifTransform = 500f;
         private string _notifMessage;
-        private bool _isDialogOpen = false;
         private bool _isEnableEdit = false;
         private bool _isSavingEnable = false;
-        private bool _onResidentReportLoaded = true; // To identify which table is displayed then apply proper filter through search input
         private float _spinnerEnable = 0f;
         private Visibility _isVisible;
         private bool _isRegisterDialogOpen;
@@ -124,12 +122,12 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public ResidentListViewModel(IDataListener dataListener) {
             _dataListener = dataListener;
-            _dataListener.Procedure = "GetResidentsList";
-            _dataListener.StartListen();
+            _dataListener.StartDbChangesListener();
 
             DataListener.OnTableChangeEvent += RefreshTable;
 
             Task.Run(() => LoadResidentList(string.Empty));
+            Task.Run(() => CheckRetention());
 
             ExecuteRefreshCommand = new DelegateCommand(RefreshTable);
             ExecuteArchiveResidentCommand = new DelegateCommand(async () => await ArchiveRecord());
@@ -142,14 +140,70 @@ namespace PrismContactTracing.Core.ViewModels {
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsRegisterDialogOpen = !IsRegisterDialogOpen; });
         }
 
+        private async Task CheckRetention() {
+            await Task.Run(() => {
+                SpinnerEnable = 1f;
+
+                QueryStrategy queryStrategy = new QueryStrategy();
+                queryStrategy.SetQuery(new GetDataQuery() {
+                    Procedure = "CompareCreateDtAndLastActDt"
+                });
+
+                if(queryStrategy.MainDataTable == null) {
+                    return;
+                }
+
+                DataTable tempTable = queryStrategy.MainDataTable;
+                List<string> keyList = new List<string>();
+                for (int i = 0; i < tempTable.Rows.Count; i++) {
+                    string key = (string)tempTable.Rows[i].ItemArray[0];
+                    string creationDate = (string)tempTable.Rows[i].ItemArray[1];
+                    string lastActDate = (string)tempTable.Rows[i].ItemArray[2];
+
+                    DateTimeOffset creatDate = Convert.ToDateTime(creationDate.Split(' ')[0].Trim());
+                    DateTimeOffset lastDate = Convert.ToDateTime(lastActDate.Split(' ')[0].Trim());
+                    long a = creatDate.ToUnixTimeSeconds();
+                    long b = lastDate.ToUnixTimeSeconds();
+
+                    // Resident did not do the body stat check yet. Make sure to check if it has been 1 year since registration date
+                    if (lastActDate == string.Empty) {
+                        long diff = creatDate.ToUnixTimeSeconds() - DateTimeOffset.Now.ToUnixTimeSeconds();
+                        if(diff >= 31622400) {
+                            keyList.Add(key);
+
+                            // Avoid subtracing create date to null valued lastDate
+                            continue;
+                        }
+                    }
+
+                    // value of 1 yr diff in epoch value 31,622,400
+                    if (creatDate.ToUnixTimeSeconds() - lastDate.ToUnixTimeSeconds() >= 31622400) {
+                        keyList.Add(key);
+                    }
+                }
+
+                // Auto archive resident that has 1yr inactivity
+                queryStrategy.SetQuery(new CheckForMarks() {
+                    Procedure = "ArchiveResident",
+                    ParameterName = "@m_key",
+                    ParameterValues = keyList,
+                });
+
+                Task.Run(() => LoadResidentList(string.Empty));
+            });
+
+            SpinnerEnable = 0f;
+        }
+
         private async Task ArchiveRecord() {
             await Task.Run(() => {
                 ShowConfirmDialog = !ShowConfirmDialog;
 
                 QueryStrategy queryStrategy = new QueryStrategy();
-                queryStrategy.SetQuery(new ArchiveQuery() {
+                queryStrategy.SetQuery(new CheckForMarks() {
                     TargetDataTable = MainDataTable,
-                    Procedure = "ArchiveResident"
+                    Procedure = "ArchiveResident",
+                    ParameterName = "@m_key"
                 });
 
                 Task.Run(() => LoadResidentList(string.Empty));
@@ -173,7 +227,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 }
 
                 QueryStrategy queryStrategy = new QueryStrategy();
-                queryStrategy.SetQuery(new SelectQuery() {
+                queryStrategy.SetQuery(new GetDataQuery() {
                     Procedure = resident == string.Empty || resident == null ? "GetResidentsList" : "GetResident",
                     Parameters = parameter
                 });
@@ -206,6 +260,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_contactnumber", _contactNumber));
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", _eName));
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactname", _eContact));
+                parameter.Add(new KeyValuePair<string, string>("@m_date_now", DateTime.Now.ToString("dd/MM/yyyy hh:mm tt")));
 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new InsertQuery() {
