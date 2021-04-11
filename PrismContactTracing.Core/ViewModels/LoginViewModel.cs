@@ -62,11 +62,11 @@ namespace PrismContactTracing.Core.ViewModels {
                 cmd.Parameters.Add("@totalcount", MySqlDbType.Int32);
                 cmd.Parameters["@totalcount"].Direction = System.Data.ParameterDirection.Output;
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
+
+                _dbConnector.Disconnect();
 
                 int count = (int)cmd.Parameters["@totalcount"].Value;
-
-                cmd.Dispose();
-                _dbConnector.Disconnect();
 
                 if (count == 0) {
                     IsVisible = 0;
