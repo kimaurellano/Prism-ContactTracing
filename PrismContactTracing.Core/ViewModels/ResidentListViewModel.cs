@@ -68,16 +68,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public string ResidentName {
             get => _residentName;
-            set {
-                SetProperty(ref _residentName, value);
-                if (_onResidentReportLoaded) {
-                    Task.Run(() => LoadResidentList(_residentName));
-                } else {
-                    //LoadResidentList(_residentName);
-                }
-
-                RaisePropertyChanged("MainDataTable");
-            }
+            set { SetProperty(ref _residentName, value); }
         }
 
         public bool ShowConfirmDialog {
@@ -183,7 +174,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new SelectQuery() {
-                    Procedure = resident == string.Empty ? "GetResidentsList" : "GetResident",
+                    Procedure = resident == string.Empty || resident == null ? "GetResidentsList" : "GetResident",
                     Parameters = parameter
                 });
 
@@ -228,7 +219,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void UpdateDb() {
             QueryStrategy queryStrategy = new QueryStrategy();
-            queryStrategy.SetQuery(new UpdateQuery() { Procedure = "GetResidentsList" });
+            queryStrategy.SetQuery(new UpdateQuery() { Procedure = "GetResidentsList", TargetDataTable = MainDataTable });
 
             Task.Run(() => LoadResidentList(string.Empty));
 

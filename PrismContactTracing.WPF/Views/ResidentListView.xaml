@@ -13,6 +13,7 @@
              d:DesignHeight="900"
              d:DesignWidth="1157">
     <Grid>
+        <!-- Registration -->
         <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
                                    CloseOnClickAway="True"
                                    HorizontalAlignment="Stretch">
@@ -89,21 +90,21 @@
                              Height="60"
                              Width="863"
                              Margin="0,50,0,0" />
-                    <TextBox Text="{Binding Purok, Mode=TwoWay}"
-                             Style="{DynamicResource MaterialDesignFilledTextBox}"
-                             materialDesign:HintAssist.Hint="Purok"
-                             materialDesign:HintAssist.FloatingScale="0.8"
-                             materialDesign:HintAssist.IsFloating="True"
-                             materialDesign:HintAssist.HelperTextFontSize="20"
-                             materialDesign:HintAssist.Foreground="Black"
-                             Foreground="Black"
-                             HorizontalAlignment="Center"
-                             FontFamily="Montserrat"
-                             FontSize="18"
-                             MinHeight="50"
-                             Height="60"
-                             Width="863"
-                             Margin="0,50,0,0" />
+                    <ComboBox Text="{Binding Purok, Mode=TwoWay}"
+                              Style="{DynamicResource MaterialDesignComboBox}"
+                              materialDesign:ComboBoxAssist.ClassicMode="True"
+                              Foreground="Black"
+                              HorizontalAlignment="Center"
+                              FontFamily="Montserrat"
+                              FontSize="18"
+                              MinHeight="50"
+                              Height="60"
+                              Width="863"
+                              Margin="0,50,0,0">
+                        <ComboBoxItem Content="Purok 1"></ComboBoxItem>
+                        <ComboBoxItem Content="Purok 2"></ComboBoxItem>
+                        <ComboBoxItem Content="Purok 3"></ComboBoxItem>
+                    </ComboBox>
                     <TextBlock Text="Emergency Contact"
                                FontFamily="Montserrat Semibold"
                                FontSize="24"

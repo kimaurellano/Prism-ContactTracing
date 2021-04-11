@@ -1,8 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Regions;
 using PrismContactTracing.Core.DataComponent;
-using PrismContactTracing.Core.Interface;
+using PrismContactTracing.Core.Listener;
 using PrismContactTracing.Core.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,8 +13,7 @@ using System.Windows.Input;
 namespace PrismContactTracing.Core.ViewModels {
     public class ResidentReportViewModel : BindableBase {
 
-        private IRegionManager _regionManager;
-        private IDbConnector _dbConnector;
+        private IDataListener _dataListener;
         private ObservableCollection<ResidentModel> _residents = new ObservableCollection<ResidentModel>();
         private DataTable _mainTable;
         private DataRowView _residentDataRowView;
@@ -29,6 +27,7 @@ namespace PrismContactTracing.Core.ViewModels {
         private Visibility _isVisible;
         private Visibility _backVisibility = Visibility.Hidden;
         private Visibility _dataModifierEnable;
+        private float _spinnerEnable = 0f;
 
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
@@ -50,16 +49,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public string ResidentName {
             get => _residentName;
-            set {
-                SetProperty(ref _residentName, value);
-                if (_onResidentReportLoaded) {
-                    Task.Run(() => LoadResidentReport(_residentName));
-                } else {
-                    //LoadResidentList(_residentName);
-                }
-
-                RaisePropertyChanged("MainDataTable");
-            }
+            set { SetProperty(ref _residentName, value); }
         }
 
         public string SearchType {
@@ -109,6 +99,11 @@ namespace PrismContactTracing.Core.ViewModels {
             get => _cursorType;
             set { SetProperty(ref _cursorType, value); }
         }
+        
+        public float SpinnerEnable {
+            get => _spinnerEnable;
+            set { SetProperty(ref _spinnerEnable, value); }
+        }
 
         public DataRowView ResidentDataRowView {
             get => _residentDataRowView;
@@ -124,27 +119,27 @@ namespace PrismContactTracing.Core.ViewModels {
             }
         }
 
-        public ResidentReportViewModel() {
+        public ResidentReportViewModel(IDataListener dataListener) {
             //Start read serial data
+
+            _dataListener = dataListener;
+            _dataListener.Procedure = "GetResidentsList";
+            _dataListener.StartListen();
+
+            DataListener.OnTableChangeEvent += RefreshTable;
 
             Task.Run(() => LoadResidentReport(string.Empty));
 
-            ExecuteSearchContentCommand = new DelegateCommand(LoadContentBySearch);
+            ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentReport(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentReport(string.Empty));
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
-        }
-
-        private void LoadContentBySearch() {
-            if (_onResidentReportLoaded) {
-                Task.Run(() => LoadResidentReport(_residentName));
-            } else {
-                //
-            }
         }
 
         /// <param name="resident">Empty value will get all rows else otherwise</param>
         private async Task LoadResidentReport(string resident) {
             await Task.Run(() => {
+                SpinnerEnable = 1;
+
                 _cursorType = Cursors.Hand;
                 RaisePropertyChanged("CursorType");
 
@@ -164,7 +159,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new SelectQuery() {
-                    Procedure = resident == string.Empty ? "GetResidentsReport" : "GetResidentReport",
+                    Procedure = resident == string.Empty || resident == null ? "GetResidentsReport" : "GetResidentReport",
                     Parameters = parameter
                 });
 
@@ -178,10 +173,14 @@ namespace PrismContactTracing.Core.ViewModels {
                 // Avoiding the main table not to update
                 RaisePropertyChanged("MainDataTable");
             });
+
+            SpinnerEnable = 0;
         }
 
         private async Task LoadCloseContactTrace(string timeIn) {
             await Task.Run(() => {
+                SpinnerEnable = 1;
+
                 _cursorType = Cursors.Arrow;
                 RaisePropertyChanged("CursorType");
 
@@ -204,6 +203,12 @@ namespace PrismContactTracing.Core.ViewModels {
                 // Avoiding the main table not to update
                 RaisePropertyChanged("MainDataTable");
             });
+
+            SpinnerEnable = 0;
+        }
+
+        private void RefreshTable() {
+            Task.Run(() => LoadResidentReport(string.Empty));
         }
     }
 }

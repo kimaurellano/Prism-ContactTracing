@@ -8,6 +8,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1157">
     <Grid>
@@ -61,43 +62,17 @@
                 <Border CornerRadius="10" Background="White" Grid.ColumnSpan="2"></Border>
                 <DataGrid x:Name="MainGrid" ItemsSource="{Binding MainDataTable}" IsReadOnly="{Binding IsReadOnlyDataGrid}" CanUserAddRows="False"
                           SelectedItem="{Binding ResidentDataRowView}" SelectionMode="Extended" SelectionUnit="FullRow" Grid.ColumnSpan="2" Cursor="{Binding CursorType}"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                            FontFamily="Montserrat"
-                            materialDesign:ButtonAssist.CornerRadius="25"
-                            Height="50"
-                            Content="Register" Margin="989,703,34,37" Background="#23765A" Command="{Binding ExecuteGenericDelegateOpenDialogCommand}"
-                            Visibility="{Binding DataModifierEnable}"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                            FontFamily="Montserrat"
-                            materialDesign:ButtonAssist.CornerRadius="25"
-                            Height="50"
-                            Content="Edit" Margin="808,703,233,37" Background="#23765A" Command="{Binding ExecuteIsEnableEditCommand}"
-                            Visibility="{Binding DataModifierEnable}"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                            FontFamily="Montserrat"
-                            materialDesign:ButtonAssist.CornerRadius="25"
-                            Height="50"
-                            Content="Archvie" Margin="620,703,407,37" Background="#23765A"
-                            Visibility="{Binding DataModifierEnable}"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                    FontFamily="Montserrat"
-                    materialDesign:ButtonAssist.CornerRadius="25"
-                    Height="50"
-                    Content="Archvie" Margin="620,703,407,37" Background="#23765A"
-                    Visibility="{Binding DataModifierEnable}"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                    FontFamily="Montserrat"
-                    materialDesign:ButtonAssist.CornerRadius="25"
-                    Height="50"
-                    Content="Edit" Margin="808,703,233,37" Background="#23765A" Command="{Binding ExecuteIsEnableEditCommand}"
-                    Visibility="{Binding DataModifierEnable}"/>
-                <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                    FontFamily="Montserrat"
-                    materialDesign:ButtonAssist.CornerRadius="25"
-                    Height="50"
-                    Content="Register" Margin="989,703,34,37" Background="#23765A" Command="{Binding ExecuteGenericDelegateOpenDialogCommand}"
-                    Visibility="{Binding DataModifierEnable}"/>
             </Grid>
         </StackPanel>
+        <fa:ImageAwesome Icon="CircleOutlineNotch"
+                         Spin="True"
+                         Opacity="{Binding SpinnerEnable}"
+                         SpinDuration="2"
+                         Height="25"
+                         Width="25"
+                         VerticalAlignment="Top"
+                         HorizontalAlignment="Left"
+                         Foreground="#000000"
+                         Margin="50,825,0,0" />
     </Grid>
 </UserControl>
