@@ -73,18 +73,18 @@
                             TextBlock.FontSize="20"
                             Background="White"
                             Margin="20,620,20,0" />
-                    <TextBlock Text="01/01/2021"
+                    <TextBlock Text="{Binding RealTimeDateLog, Mode=TwoWay}"
                                FontFamily="Montserrat Semibold"
                                FontSize="17"
                                HorizontalAlignment="Left"
                                Margin="20,25,0,0"
                                Foreground="White" />
-                    <TextBlock Text="07:00 AM"
+                    <TextBlock Text="{Binding RealTimeLog, Mode=TwoWay}"
                                FontFamily="Montserrat Semibold"
                                FontSize="32"
                                HorizontalAlignment="Left"
                                Margin="20,0,0,0"
-                               Foreground="White" />
+                               Foreground="White"/>
                 </StackPanel>
             </Grid>
 
