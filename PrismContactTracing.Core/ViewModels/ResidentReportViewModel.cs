@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using PrismContactTracing.Core.DataComponent;
+using PrismContactTracing.Core.IO;
 using PrismContactTracing.Core.Listener;
 using PrismContactTracing.Core.Models;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
+        public DelegateCommand ExecuteExportToExcelCommand { get; private set; }
         public DelegateCommand ExecuteSearchContentCommand { get; private set; }
         public DelegateCommand<object> ExecuteLoadResidentsReportCommand { get; private set; }
         public DelegateCommand ExecuteGenericDelegateOpenDialogCommand { get; private set; }
@@ -129,9 +131,15 @@ namespace PrismContactTracing.Core.ViewModels {
 
             Task.Run(() => LoadResidentReport(string.Empty));
 
+            ExecuteExportToExcelCommand = new DelegateCommand(ExportToExcel);
             ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentReport(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentReport(string.Empty));
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsDialogOpen = !IsDialogOpen; });
+        }
+
+        private void ExportToExcel() {
+            IOManager ioManager = new IOManager();
+            ioManager.ExportToExcel(MainDataTable, "Report");
         }
 
         /// <param name="resident">Empty value will get all rows else otherwise</param>
@@ -184,7 +192,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 RaisePropertyChanged("CursorType");
 
                 List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
-                parameter.Add(new KeyValuePair<string, string>("@m_time_in", timeIn));
+                parameter.Add(new KeyValuePair<string, string>("@m_time_in", timeIn.Split(' ')[0]));
 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new GetDataQuery() {
