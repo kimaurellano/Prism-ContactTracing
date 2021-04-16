@@ -29,7 +29,7 @@
                                Margin="15,0,0,0" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-                        <TextBox Text="{Binding FirstName, Mode=TwoWay}"
+                        <TextBox Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="First Name"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -44,7 +44,7 @@
                                  Height="60"
                                  Width="397"
                                  Margin="0,50,70,0" />
-                        <TextBox Text="{Binding LastName, Mode=TwoWay}"
+                        <TextBox Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="Last Name"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -60,7 +60,7 @@
                                  Width="397"
                                  Margin="0,50,0,0" />
                     </StackPanel>
-                    <TextBox Text="{Binding ContactNumber, Mode=TwoWay}"
+                    <TextBox Text="{Binding ContactNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{DynamicResource MaterialDesignFilledTextBox}"
                              materialDesign:HintAssist.Hint="Contact Number"
                              materialDesign:HintAssist.FloatingScale="0.8"
@@ -75,7 +75,7 @@
                              Height="60"
                              Width="863"
                              Margin="0,50,0,0" />
-                    <TextBox Text="{Binding Address, Mode=TwoWay}"
+                    <TextBox Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{DynamicResource MaterialDesignFilledTextBox}"
                              materialDesign:HintAssist.Hint="Address"
                              materialDesign:HintAssist.FloatingScale="0.8"
@@ -90,7 +90,7 @@
                              Height="60"
                              Width="863"
                              Margin="0,50,0,0" />
-                    <ComboBox Text="{Binding Purok, Mode=TwoWay}"
+                    <ComboBox Text="{Binding Purok, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               Style="{DynamicResource MaterialDesignComboBox}"
                               materialDesign:ComboBoxAssist.ClassicMode="True"
                               Foreground="Black"
@@ -112,7 +112,7 @@
                                Margin="15,50,0,0" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-                        <TextBox Text="{Binding EName, Mode=TwoWay}"
+                        <TextBox Text="{Binding EName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="Name"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -127,7 +127,7 @@
                                  Height="60"
                                  Width="397"
                                  Margin="0,30,70,0" />
-                        <TextBox Text="{Binding EContact, Mode=TwoWay}"
+                        <TextBox Text="{Binding EContact, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="Contacts Number"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -144,6 +144,7 @@
                                  Margin="0,30,0,0" />
                     </StackPanel>
                     <Button Content="Submit"
+                            IsEnabled="{Binding IsAllFieldsComplete}"
                             Command="{Binding ExecuteInsertCommand}"
                             Margin="0,30,0,0"
                             Width="200"

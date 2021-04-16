@@ -35,17 +35,9 @@ namespace PrismContactTracing.Core.ViewModels {
         private Visibility _isVisible;
         private bool _isRegisterDialogOpen;
         private bool _showConfirmDialog;
+        private bool _isAllFieldsComplete;
 
-        public string ResidentId { get => _residentId; set { SetProperty(ref _residentId, value); } }
-        public string FirstName { get => _firstName; set { SetProperty(ref _firstName, value); } }
-        public string LastName { get => _lastName; set => _lastName = value; }
-        public string IdNumber { get => _idNumber; set => _idNumber = value; }
-        public string Purok { get => _purok; set => _purok = value; }
-        public string Address { get => _address; set => _address = value; }
-        public string ContactNumber { get => _contactNumber; set => _contactNumber = value; }
-        public string EName { get => _eName; set => _eName = value; }
-        public string EContact { get => _eContact; set => _eContact = value; }
-
+        #region Delegates
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
         public DelegateCommand ExecuteRegistrationDialogCommand { get; private set; }
@@ -58,6 +50,18 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand ExecuteArchiveResidentCommand { get; private set; }
         public DelegateCommand ExecuteShowConfirmDialogCommand { get; private set; }
         public DelegateCommand ExecuteInsertCommand { get; private set; }
+        #endregion Delegates
+
+        #region GetterSetter
+        public string ResidentId { get => _residentId; set { SetProperty(ref _residentId, value); CheckFields(); } }
+        public string FirstName { get => _firstName; set { SetProperty(ref _firstName, value); CheckFields(); } }
+        public string LastName { get => _lastName; set { SetProperty(ref _lastName, value); CheckFields(); } }
+        public string IdNumber { get => _idNumber; set { SetProperty(ref _idNumber, value); CheckFields(); } }
+        public string Purok { get => _purok; set { SetProperty(ref _purok, value); CheckFields(); } }
+        public string Address { get => _address; set { SetProperty(ref _address, value); CheckFields(); } }
+        public string ContactNumber { get => _contactNumber; set { SetProperty(ref _contactNumber, value); CheckFields(); } }
+        public string EName { get => _eName; set { SetProperty(ref _eName, value); CheckFields(); } }
+        public string EContact { get => _eContact; set { SetProperty(ref _eContact, value); CheckFields(); } }
 
         public DataTable MainDataTable {
             get => _mainTable;
@@ -115,10 +119,16 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _notifTransform, value); }
         }
 
+        public bool IsAllFieldsComplete {
+            get => _isAllFieldsComplete;
+            set { SetProperty(ref _isAllFieldsComplete, value); }
+        }
+
         public DataRowView ResidentDataRowView {
             get => _residentDataRowView;
             set { SetProperty(ref _residentDataRowView, value); }
         }
+        #endregion GetterSetter
 
         public ResidentListViewModel(IDataListener dataListener) {
             _dataListener = dataListener;
@@ -138,6 +148,13 @@ namespace PrismContactTracing.Core.ViewModels {
             ExecuteSearchContentCommand = new DelegateCommand(async () => await LoadResidentList(_residentName));
             ExecuteLoadResidentsReportCommand = new DelegateCommand<object>(async (p) => await LoadResidentList(string.Empty));
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsRegisterDialogOpen = !IsRegisterDialogOpen; });
+        }
+
+        private void CheckFields() {
+            _isAllFieldsComplete = (
+                FirstName != null && LastName != null && Purok != null && Address != null && ContactNumber != null && EName != null && EContact != null &&
+                FirstName != string.Empty && LastName != string.Empty && Purok != string.Empty && Address != string.Empty && ContactNumber != string.Empty && EName != string.Empty && EContact != string.Empty);
+            RaisePropertyChanged("IsAllFieldsComplete");
         }
 
         private async Task CheckRetention() {
@@ -250,8 +267,6 @@ namespace PrismContactTracing.Core.ViewModels {
             await Task.Run(() => {
                 SpinnerEnable = 1f;
 
-                IsRegisterDialogOpen = !IsRegisterDialogOpen;
-
                 List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
                 parameter.Add(new KeyValuePair<string, string>("@m_firstname", _firstName));
                 parameter.Add(new KeyValuePair<string, string>("@m_lastname", _lastName));
@@ -261,6 +276,18 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", _eName));
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactname", _eContact));
                 parameter.Add(new KeyValuePair<string, string>("@m_date_now", DateTime.Now.ToString("dd/MM/yyyy hh:mm tt")));
+
+                // Clear fields after insertion
+                FirstName = string.Empty;
+                LastName = string.Empty;
+                IdNumber = string.Empty;
+                Purok = string.Empty;
+                Address = string.Empty;
+                ContactNumber = string.Empty;
+                EName = string.Empty;
+                EContact = string.Empty;
+
+                IsRegisterDialogOpen = !IsRegisterDialogOpen;
 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new InsertQuery() {
