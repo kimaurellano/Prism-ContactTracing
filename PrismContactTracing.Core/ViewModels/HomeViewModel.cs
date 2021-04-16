@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using PrismContactTracing.Core.DataComponent;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace PrismContactTracing.Core.ViewModels {
@@ -15,9 +17,11 @@ namespace PrismContactTracing.Core.ViewModels {
         private SerialPort _serialPort;
         private string _realTimeLog;
         private string _realTimeDateLog;
+        private bool _showConfirmDialog;
 
         public DelegateCommand<string> NavigateToCommand { get; private set; }
-
+        public DelegateCommand ExecuteLogoutCommand { get; private set; }
+        public DelegateCommand ExecuteConfirmCommand { get; private set; }
         public string ResidentId { get; private set; }
         public string Temperature { get; private set; }
         public string FirstName { get; private set; }
@@ -37,10 +41,17 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _realTimeLog, value); } 
         }
 
+        public bool ShowConfirmDialog {
+            get => _showConfirmDialog;
+            set { SetProperty(ref _showConfirmDialog, value); }
+        }
+
         public HomeViewModel(IRegionManager regionManager) {
             _regionManager = regionManager;
 
             NavigateToCommand = new DelegateCommand<string>(NavigateTo);
+            ExecuteLogoutCommand = new DelegateCommand(() => { ShowConfirmDialog = !ShowConfirmDialog; });
+            ExecuteConfirmCommand = new DelegateCommand(() => { ShowConfirmDialog = !ShowConfirmDialog; Application.Current.Shutdown(); });
 
             NavigateTo("AdminView");
 

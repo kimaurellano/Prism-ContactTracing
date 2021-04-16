@@ -27,193 +27,230 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto">
-        <StackPanel Style="{StaticResource MainBG}"
-                    Orientation="Horizontal">
-            <Grid Width="328"
-                  HorizontalAlignment="Left"
-                  Margin="0,0,10,0">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="DASHBOARD"
-                               Foreground="White"
-                               FontSize="32"
-                               FontFamily="Montserrat SemiBold"
-                               FontWeight="Regular"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                               Margin="0,50,0,0" />
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                            Content="ADMIN"
-                            Height="45"
-                            Foreground="#23765A"
-                            TextBlock.FontFamily="Montserrat Semibold"
-                            TextBlock.FontSize="20"
-                            Background="White"
-                            Margin="20,10,20,0"
-                            Command="{Binding NavigateToCommand}"
-                            CommandParameter="AdminView" />
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                            Content="RESIDENTS"
-                            Height="45"
-                            Foreground="#23765A"
-                            TextBlock.FontFamily="Montserrat Semibold"
-                            TextBlock.FontSize="20"
-                            Background="White"
-                            Margin="20,15,20,0"
-                            Command="{Binding NavigateToCommand}"
-                            CommandParameter="ResidentListView" />
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                            Content="REPORT"
-                            Height="45"
-                            Foreground="#23765A"
-                            TextBlock.FontFamily="Montserrat Semibold"
-                            TextBlock.FontSize="20"
-                            Background="White"
-                            Margin="20,15,20,0"
-                            Command="{Binding NavigateToCommand}"
-                            CommandParameter="ResidentReportView" />
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                            Content="ARCHIVE"
-                            Height="45"
-                            Foreground="#23765A"
-                            TextBlock.FontFamily="Montserrat Semibold"
-                            TextBlock.FontSize="20"
-                            Background="White"
-                            Margin="20,15,20,0"
-                            Command="{Binding NavigateToCommand}"
-                            CommandParameter="ArchiveView" />
-                    <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                            Content="LOG OUT"
-                            Height="45"
-                            Foreground="#23765A"
-                            TextBlock.FontFamily="Montserrat Semibold"
-                            TextBlock.FontSize="20"
-                            Background="White"
-                            Margin="20,545,20,0" />
-                    <TextBlock Text="{Binding RealTimeDateLog, Mode=TwoWay}"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="17"
-                               HorizontalAlignment="Left"
-                               Margin="20,25,0,0"
-                               Foreground="White" />
-                    <TextBlock Text="{Binding RealTimeLog, Mode=TwoWay}"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="32"
-                               HorizontalAlignment="Left"
-                               Margin="20,0,0,0"
-                               Foreground="White" />
-                </StackPanel>
-            </Grid>
+    <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
+                               HorizontalAlignment="Stretch"
+                               CloseOnClickAway="True">
+        <materialDesign:DialogHost.DialogContent>
+            <StackPanel Margin="10"
+                        Width="150"
+                        Height="90">
+                <TextBlock HorizontalAlignment="Center"
+                           Text="Do you want to log out?" />
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,10,0,0">
+                    <Button IsDefault="True"
+                            Margin="0,10,10,0"
+                            Content="YES"
+                            Command="{Binding ExecuteConfirmCommand}"
+                            Foreground="Green">
+                        <Button.CommandParameter>
+                            <system:Boolean>True</system:Boolean>
+                        </Button.CommandParameter>
+                    </Button>
 
-            <!--DataGrid container-->
-            <ContentControl prism:RegionManager.RegionName="ContentType"
-                            Width="1180" />
-
-            <!--Live person scan container-->
-            <Grid Margin="10,90,10,0"
-                  Height="501"
-                  Width="375"
-                  VerticalAlignment="Top">
-                <Border CornerRadius="10"
-                        Background="White" />
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="ID Number"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Margin="30,30,0,0" />
-                        <TextBlock Text="{Binding ResidentId}"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Foreground="#23765A" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Temperature"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Margin="30,30,0,0" />
-                        <TextBlock Text="{Binding Temperature}"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Foreground="#23765A" />
-                    </StackPanel>
-                    <TextBlock Text="First Name"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="18"
-                               HorizontalAlignment="Center"
-                               Margin="0,30,0,0" />
-                    <TextBlock Text="{Binding FirstName}"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="18"
-                               Foreground="#23765A"
-                               HorizontalAlignment="Center" 
-                               Margin="0,10,0,0"/>
-                    <TextBlock Text="Last Name"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="18"
-                               HorizontalAlignment="Center"
-                               Margin="0,30,0,0" />
-                    <TextBlock Text="{Binding LastName}"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="18"
-                               Foreground="#23765A"
-                               HorizontalAlignment="Center"
-                               Margin="0,10,0,0" />
-                    <TextBlock Text="Symptoms"
-                               FontFamily="Montserrat Semibold"
-                               FontSize="18"
-                               HorizontalAlignment="Center"
-                               Margin="0,30,0,0" />
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Margin="0,10,0,0">
-                        <TextBlock Text="Cough"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18" />
-                        <TextBlock Text="{Binding HasCoughs}"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Foreground="#23765A"
-                                   Margin="20,0,0,0" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Margin="0,10,0,0">
-                        <TextBlock Text="Colds"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18" />
-                        <TextBlock Text="{Binding HasColds}"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Foreground="#23765A"
-                                   Margin="30,0,0,0" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Margin="0,10,0,0">
-                        <TextBlock Text="Fever"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18" />
-                        <TextBlock Text="{Binding HasFever}"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Foreground="#23765A"
-                                   Margin="30,0,0,0" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="30,30,0,0">
-                        <TextBlock Text="Time In"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   HorizontalAlignment="Left" />
-                        <TextBlock Text="{Binding TimeIn}"
-                                   FontFamily="Montserrat Semibold"
-                                   FontSize="18"
-                                   Foreground="#23765A"
-                                   Margin="30,0,0,0"/>
-                    </StackPanel>
+                    <Button IsCancel="True"
+                            Margin="0,10,0,0"
+                            Content="NO"
+                            Command="materialDesign:DialogHost.CloseDialogCommand">
+                        <Button.CommandParameter>
+                            <system:Boolean>False</system:Boolean>
+                        </Button.CommandParameter>
+                    </Button>
                 </StackPanel>
-            </Grid>
-        </StackPanel>
-    </ScrollViewer>
+            </StackPanel>
+        </materialDesign:DialogHost.DialogContent>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Style="{StaticResource MainBG}"
+                        Orientation="Horizontal">
+                <Grid Width="328"
+                      HorizontalAlignment="Left"
+                      Margin="0,0,10,0">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="DASHBOARD"
+                                   Foreground="White"
+                                   FontSize="32"
+                                   FontFamily="Montserrat SemiBold"
+                                   FontWeight="Regular"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Margin="0,50,0,0" />
+                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                                Content="ADMIN"
+                                Height="45"
+                                Foreground="#23765A"
+                                TextBlock.FontFamily="Montserrat Semibold"
+                                TextBlock.FontSize="20"
+                                Background="White"
+                                Margin="20,10,20,0"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="AdminView" />
+                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                                Content="RESIDENTS"
+                                Height="45"
+                                Foreground="#23765A"
+                                TextBlock.FontFamily="Montserrat Semibold"
+                                TextBlock.FontSize="20"
+                                Background="White"
+                                Margin="20,15,20,0"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="ResidentListView" />
+                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                                Content="REPORT"
+                                Height="45"
+                                Foreground="#23765A"
+                                TextBlock.FontFamily="Montserrat Semibold"
+                                TextBlock.FontSize="20"
+                                Background="White"
+                                Margin="20,15,20,0"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="ResidentReportView" />
+                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                                Content="ARCHIVE"
+                                Height="45"
+                                Foreground="#23765A"
+                                TextBlock.FontFamily="Montserrat Semibold"
+                                TextBlock.FontSize="20"
+                                Background="White"
+                                Margin="20,15,20,0"
+                                Command="{Binding NavigateToCommand}"
+                                CommandParameter="ArchiveView" />
+                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                                Content="LOG OUT"
+                                Height="45"
+                                Foreground="#23765A"
+                                TextBlock.FontFamily="Montserrat Semibold"
+                                TextBlock.FontSize="20"
+                                Background="White"
+                                Margin="20,545,20,0"
+                                Command="{Binding ExecuteLogoutCommand}" />
+                        <TextBlock Text="{Binding RealTimeDateLog, Mode=TwoWay}"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="17"
+                                   HorizontalAlignment="Left"
+                                   Margin="20,25,0,0"
+                                   Foreground="White" />
+                        <TextBlock Text="{Binding RealTimeLog, Mode=TwoWay}"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="32"
+                                   HorizontalAlignment="Left"
+                                   Margin="20,0,0,0"
+                                   Foreground="White" />
+                    </StackPanel>
+                </Grid>
+
+                <!--DataGrid container-->
+                <ContentControl prism:RegionManager.RegionName="ContentType"
+                                Width="1180" />
+
+                <!--Live person scan container-->
+                <Grid Margin="10,90,10,0"
+                      Height="501"
+                      Width="375"
+                      VerticalAlignment="Top">
+                    <Border CornerRadius="10"
+                            Background="White" />
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ID Number"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Margin="30,30,0,0" />
+                            <TextBlock Text="{Binding ResidentId}"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Foreground="#23765A" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Temperature"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Margin="30,30,0,0" />
+                            <TextBlock Text="{Binding Temperature}"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Foreground="#23765A" />
+                        </StackPanel>
+                        <TextBlock Text="First Name"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="18"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,30,0,0" />
+                        <TextBlock Text="{Binding FirstName}"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="18"
+                                   Foreground="#23765A"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,10,0,0" />
+                        <TextBlock Text="Last Name"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="18"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,30,0,0" />
+                        <TextBlock Text="{Binding LastName}"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="18"
+                                   Foreground="#23765A"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,10,0,0" />
+                        <TextBlock Text="Symptoms"
+                                   FontFamily="Montserrat Semibold"
+                                   FontSize="18"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,30,0,0" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,10,0,0">
+                            <TextBlock Text="Cough"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18" />
+                            <TextBlock Text="{Binding HasCoughs}"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Foreground="#23765A"
+                                       Margin="20,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,10,0,0">
+                            <TextBlock Text="Colds"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18" />
+                            <TextBlock Text="{Binding HasColds}"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Foreground="#23765A"
+                                       Margin="30,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,10,0,0">
+                            <TextBlock Text="Fever"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18" />
+                            <TextBlock Text="{Binding HasFever}"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Foreground="#23765A"
+                                       Margin="30,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="30,30,0,0">
+                            <TextBlock Text="Time In"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       HorizontalAlignment="Left" />
+                            <TextBlock Text="{Binding TimeIn}"
+                                       FontFamily="Montserrat Semibold"
+                                       FontSize="18"
+                                       Foreground="#23765A"
+                                       Margin="30,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </materialDesign:DialogHost>
 </UserControl>

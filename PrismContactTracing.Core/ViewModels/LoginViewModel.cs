@@ -13,8 +13,7 @@ namespace PrismContactTracing.Core.ViewModels {
         private IRegionManager _regionManager;
         private IDbConnector _dbConnector;
         private string _username;
-        private bool _isAuth;
-        private float _isVisible;
+        private float _spinnerEnable;
 
         public DelegateCommand<object> ExecuteGenericDelegateCommand { get; private set; }
 
@@ -23,14 +22,9 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _username, value); }
         }
 
-        public bool IsAuth {
-            get => !_isAuth;
-            set { SetProperty(ref _isAuth, value, "IsVisible"); }
-        }
-
-        public float IsVisible {
-            get => _isVisible;
-            set { SetProperty(ref _isVisible, value); }
+        public float SpinnerEnable {
+            get => _spinnerEnable;
+            set { SetProperty(ref _spinnerEnable, value); }
         }
 
         public LoginViewModel(IRegionManager regionManager, IDbConnector dbConnector) {
@@ -42,7 +36,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private async Task ExecuteGeneric(object parameter) {
             var result = await Task.Run(() => {
-                IsVisible = 1;
+                SpinnerEnable = 1;
 
                 _dbConnector.Connect();
 
@@ -69,8 +63,6 @@ namespace PrismContactTracing.Core.ViewModels {
                 int count = (int)cmd.Parameters["@totalcount"].Value;
 
                 if (count == 0) {
-                    IsVisible = 0;
-
                     MessageBox.Show("Invalid credentials", "Login error", MessageBoxButton.OK);
                     return string.Empty;
                 }
@@ -78,7 +70,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 return "HomeView";
             });
 
-            IsVisible = 0;
+            SpinnerEnable = 0;
 
             Navigate(result);
         }
