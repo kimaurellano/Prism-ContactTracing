@@ -275,7 +275,6 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_contactnumber", _contactNumber));
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", _eName));
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactname", _eContact));
-                parameter.Add(new KeyValuePair<string, string>("@m_date_now", DateTime.Now.ToString("dd/MM/yyyy hh:mm tt")));
 
                 // Clear fields after insertion
                 FirstName = string.Empty;
