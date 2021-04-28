@@ -26,7 +26,6 @@ namespace PrismContactTracing.Core {
             containerRegistry.RegisterForNavigation<LoginView>();
             containerRegistry.RegisterForNavigation<HomeView>();
             containerRegistry.RegisterForNavigation<AdminView>();
-            containerRegistry.RegisterForNavigation<SettingsView>();
         }
     }
 }
