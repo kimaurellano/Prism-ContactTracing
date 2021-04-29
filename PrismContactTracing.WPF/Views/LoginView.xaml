@@ -64,7 +64,7 @@
     </UserControl.Resources>
 
     <Grid Style="{StaticResource MainBG}">
-        <TextBlock Text="BARANGAR TEJERO CONTACT TRACING"
+        <TextBlock Text="BARANGAY TEJERO CONTACT TRACING"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
                    TextBlock.Foreground="#FFFFFF"
@@ -145,5 +145,9 @@
                          HorizontalAlignment="Left"
                          Foreground="#000000"
                          Margin="949,753,0,0" />
+        <TextBlock Text="v0.9"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Bottom"
+                   Margin="5,5" />
     </Grid>
 </UserControl>
