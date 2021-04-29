@@ -26,6 +26,23 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="LoginCustomBorder"
+               TargetType="{x:Type Border}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="#DEDEDE"
+                                     Opacity="0.8" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CornerRadius">
+                <Setter.Value>
+                    <CornerRadius TopLeft="10"
+                                  TopRight="10"
+                                  BottomRight="0"
+                                  BottomLeft="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
                                HorizontalAlignment="Stretch"
@@ -124,7 +141,7 @@
                                 TextBlock.FontFamily="Montserrat Semibold"
                                 TextBlock.FontSize="20"
                                 Background="White"
-                                Margin="20,545,20,0"
+                                Margin="20,495,20,0"
                                 Command="{Binding ExecuteLogoutCommand}" />
                         <TextBlock Text="{Binding RealTimeDateLog, Mode=TwoWay}"
                                    FontFamily="Montserrat Semibold"
@@ -147,7 +164,7 @@
 
                 <!--Live person scan container-->
                 <Grid Margin="10,90,10,0"
-                      Height="501"
+                      Height="695"
                       Width="375"
                       VerticalAlignment="Top">
                     <Border CornerRadius="10"
@@ -249,6 +266,41 @@
                                        Margin="30,0,0,0" />
                         </StackPanel>
                     </StackPanel>
+                    <Border Style="{StaticResource LoginCustomBorder}"
+                            Margin="0,0,0,145"
+                            Visibility="{Binding LogVisibilty}">
+                        <TextBlock Text="Disconnected"
+                                   FontSize="32"
+                                   FontFamily="Montserrat Semibold"
+                                   Foreground="#FD5555"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
+                        </TextBlock>
+                    </Border>
+                    <TextBlock Text="Serial Port"
+                               FontFamily="Montserrat Semibold"
+                               FontSize="18"
+                               VerticalAlignment="Bottom"
+                               Margin="46,0,222,70" />
+                    <ComboBox Name="CboPort"
+                              HorizontalContentAlignment="Center"
+                              FontSize="18"
+                              FontFamily="Montserrat Semibold"
+                              SelectedValue="{Binding CurrentItem, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding PortList}"
+                              VerticalAlignment="Bottom"
+                              Margin="153,0,48,68" />
+                    <Button VerticalAlignment="Bottom"
+                            Margin="180,0,48,20"
+                            IsEnabled="{Binding SerialButtonEnable}"
+                            Content="{Binding ConnectionState}"
+                            Command="{Binding ConnectPortCommand}"
+                            CommandParameter="{Binding Text, ElementName=CboPort}" />
+                    <TextBlock Text="{Binding SerialLog}"
+                               FontFamily="Montserrat Semibold"
+                               FontSize="9"
+                               VerticalAlignment="Bottom"
+                               Margin="10,0,210,14" />
                 </Grid>
             </StackPanel>
         </ScrollViewer>
