@@ -10,17 +10,20 @@ namespace PrismContactTracing.Core.Listener {
         private BackgroundWorker _backgroundWorkerForDbListener;
         private BackgroundWorker _backgroundWorkerForSerialListener;
         private DbConnector _dbConnector;
-        private ResidentContactTraceModel _residentContactTraceModel;
-        private SerialPort _serialPort;
 
         public static event OnTableChange OnTableChangeEvent;
         public static event OnSerialRead OnSerialReadEvent;
 
         public delegate void OnTableChange();
-        public delegate void OnSerialRead(ResidentContactTraceModel residentContactTraceInfo);
+        public delegate void OnSerialRead();
 
         public DataListener() {
             _backgroundWorkerForDbListener = new BackgroundWorker() {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+
+            _backgroundWorkerForSerialListener = new BackgroundWorker() {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
@@ -35,11 +38,16 @@ namespace PrismContactTracing.Core.Listener {
             _backgroundWorkerForDbListener.RunWorkerAsync();
         }
 
-        public void StartSerialReadListener(SerialPort configs) {
-            SerialPort serialPort = configs;
-            if (!serialPort.IsOpen) {
-                serialPort.Open();
-            }
+        public void StartWaitForTimeOutComPort() {
+            _backgroundWorkerForSerialListener.DoWork += OnDoWorkSerialListen;
+            _backgroundWorkerForSerialListener.ProgressChanged += OnDoWorkSerialListenChanged;
+
+            // Start backgroundworker
+            _backgroundWorkerForSerialListener.RunWorkerAsync();
+        }
+
+        public void CancelWaitForTimeOutComPort() {
+            _backgroundWorkerForSerialListener.CancelAsync();
         }
 
         private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e) {
@@ -49,6 +57,12 @@ namespace PrismContactTracing.Core.Listener {
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs e) {
             OnTableChangeEvent?.Invoke();
+        }
+
+        private void OnDoWorkSerialListenChanged(object sender, ProgressChangedEventArgs e) {
+            OnSerialReadEvent?.Invoke();
+
+            _backgroundWorkerForSerialListener.CancelAsync();
         }
 
         private void OnDoWork(object sender, DoWorkEventArgs e) {
@@ -67,12 +81,20 @@ namespace PrismContactTracing.Core.Listener {
         private void OnDoWorkSerialListen(object sender, DoWorkEventArgs e) {
             BackgroundWorker worker = (BackgroundWorker)sender;
             while (!worker.CancellationPending) {
+                // Wait time for arduino response after connection
+                Thread.Sleep(10000);
+
                 // Just cause an invoke
                 worker.ReportProgress(0, null);
+
+                // No need to run background worker
+                worker.CancelAsync();
             }
+
+            e.Cancel = true;
         }
 
-        void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+        private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             // This will run on the main form thread when the background work is
             // done; it connects the results to the data grid.
             _dbConnector.Disconnect();

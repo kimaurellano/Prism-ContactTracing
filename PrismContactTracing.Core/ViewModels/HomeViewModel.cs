@@ -7,6 +7,7 @@ using PrismContactTracing.Core.Listener;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO.Ports;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +17,7 @@ namespace PrismContactTracing.Core.ViewModels {
     public class HomeViewModel : BindableBase {
 
         private IRegionManager _regionManager;
+        private IDataListener _dataListener;
         private ObservableCollection<string> _portList;
         private SerialPort _serialPort;
         private string _realTimeLog;
@@ -25,6 +27,7 @@ namespace PrismContactTracing.Core.ViewModels {
         private bool _serialButtonEnable;
         private Visibility _logVisibility;
         private string _serialLog;
+        private bool _allowPortChange;
 
         public DelegateCommand<string> ConnectPortCommand { get; private set; }
         public DelegateCommand<string> NavigateToCommand { get; private set; }
@@ -70,6 +73,13 @@ namespace PrismContactTracing.Core.ViewModels {
             }
         }
 
+        public bool AllowPortChange {
+            get => _allowPortChange;
+            set {
+                SetProperty(ref _allowPortChange, value);
+            }
+        }
+
         public bool SerialButtonEnable {
             get => _serialButtonEnable;
             set {
@@ -92,8 +102,9 @@ namespace PrismContactTracing.Core.ViewModels {
             set { SetProperty(ref _showConfirmDialog, value); }
         }
 
-        public HomeViewModel(IRegionManager regionManager) {
+        public HomeViewModel(IRegionManager regionManager, IDataListener dataListener) {
             _regionManager = regionManager;
+            _dataListener = dataListener;
 
             ConnectPortCommand = new DelegateCommand<string>((port) => StartListen(port));
             NavigateToCommand = new DelegateCommand<string>(NavigateTo);
@@ -118,11 +129,14 @@ namespace PrismContactTracing.Core.ViewModels {
             ConnectionState = "Connect";
 
             _serialPort = new SerialPort();
+
+            AllowPortChange = true;
+            RaisePropertyChanged("AllowPortChange");
         }
 
         private void StartListen(string port) {
-            if (!_serialPort.IsOpen && _serialPort.PortName != port) {
-                // Just in case other port are opened before
+            if (!_serialPort.IsOpen) {
+                // Just in case other port are opened before. Need to close that first.
                 _serialPort.Close();
 
                 _serialPort.PortName = port;
@@ -133,10 +147,12 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 SerialButtonEnable = !SerialButtonEnable;
                 RaisePropertyChanged("SerialButtonEnable");
+
+                _dataListener.StartWaitForTimeOutComPort();
+                DataListener.OnSerialReadEvent += ConnectionTimeOut;
             } else {
                 _serialPort.Close();
                 _serialPort.DataReceived -= RefreshTraceLog;
-                _serialPort.PortName = "COMX";
 
                 SerialLog = "Disconnected";
                 RaisePropertyChanged("SerialLog");
@@ -147,6 +163,20 @@ namespace PrismContactTracing.Core.ViewModels {
 
             ConnectionState = _serialPort.IsOpen ? "Disconnect" : "Connect";
             RaisePropertyChanged("ConnectionState");
+
+            AllowPortChange = !_serialPort.IsOpen;
+            RaisePropertyChanged("AllowPortChange");
+        }
+
+        private void ConnectionTimeOut() {
+            DataListener.OnSerialReadEvent -= ConnectionTimeOut;
+            StartListen(_serialPort.PortName);
+
+            SerialButtonEnable = !SerialButtonEnable;
+            RaisePropertyChanged("SerialButtonEnable");
+
+            SerialLog = "Invalid port";
+            RaisePropertyChanged("SerialLog");
         }
 
         private void RefreshTraceLog(object sender, SerialDataReceivedEventArgs e) {
@@ -159,23 +189,47 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 SerialButtonEnable = !SerialButtonEnable;
                 RaisePropertyChanged("SerialButtonEnable");
+
+                // No need to run timeout check since we are already connected
+                _dataListener.CancelWaitForTimeOutComPort();
+                DataListener.OnSerialReadEvent -= ConnectionTimeOut;
             }
 
-            //string value = indata.Split(":")[1];
-            //if (indata.Contains("KEY:")) {
-            //    ResidentId = value;
-            //} else if (indata.Contains("TEMP:")) {
-            //    Temperature = value;
-            //} else if (indata.Contains("HASCOUGH:")) {
-            //    HasCoughs = value;
-            //} else if (indata.Contains("HASCOLDS:")) {
-            //    HasColds = value;
-            //} else if (indata.Contains("HASFEVER:")) {
-            //    HasFever = value;
+            // We are expecting value like this
+            // QR:FirstName,LastName,Purok,ContactNumber,Address,EContact,EName
+            if (indata.Contains("QR")) {
+                string qrData = indata.Replace("QR:", "");
 
-            //    // We expect that the HasFever will always be the last to checked
-            //    Task.Run(() => InsertResident());
-            //}
+                DataTable resultTable = CheckResident(qrData);
+
+                // Only one row is populated to the datatable. so idx 0(row 0 at col 0) we use.
+                ResidentId = resultTable.Rows[0].ItemArray[0].ToString();
+                RaisePropertyChanged("ResidentId");
+
+                if(resultTable.Rows.Count > 0) {
+                    // Allow body scan
+                    sp.Write("Registered");
+                } else {
+                    sp.Write("Not Registered");
+                }
+            }
+
+            if (indata.Contains("TEMP:")) {
+                Temperature = indata.Split(":")[1];
+                RaisePropertyChanged("Temperature");
+            } else if (indata.Contains("COLD:")) {
+                HasColds = indata.Split(":")[1];
+                RaisePropertyChanged("HasColds");
+            } else if (indata.Contains("COUGH:")) {
+                HasCoughs = indata.Split(":")[1];
+                RaisePropertyChanged("HasCoughs");
+
+                // I did not find any fever check only last one checked is cough.
+                // Then shoud insert after cough check.
+                Task.Run(() => InsertResidentContactTrace());
+            } else if (indata.Contains("FEVER:")) {
+                HasFever = indata.Split(":")[1];
+            }
         }
 
         private void NavigateTo(string page) {
@@ -192,7 +246,32 @@ namespace PrismContactTracing.Core.ViewModels {
             RaisePropertyChanged("RealTimeDateLog");
         }
 
-        private async Task InsertResident() {
+        private DataTable CheckResident(string qrData) {
+            List<string> residentInfo = new List<string>();
+            foreach (var data in qrData.Split(',')) {
+                residentInfo.Add(data);
+            }
+
+            List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
+            parameter.Add(new KeyValuePair<string, string>("@m_firstname", residentInfo[0]));
+            parameter.Add(new KeyValuePair<string, string>("@m_lastname", residentInfo[1]));
+            parameter.Add(new KeyValuePair<string, string>("@m_purok", residentInfo[2]));
+            parameter.Add(new KeyValuePair<string, string>("@m_contact", residentInfo[3]));
+            parameter.Add(new KeyValuePair<string, string>("@m_address", residentInfo[4]));
+            parameter.Add(new KeyValuePair<string, string>("@m_econtact", residentInfo[5]));
+            parameter.Add(new KeyValuePair<string, string>("@m_ename", residentInfo[6]));
+
+
+            QueryStrategy queryStrategy = new QueryStrategy();
+            queryStrategy.SetQuery(new GetDataQuery() {
+                Procedure = "GetUniqueResident",
+                Parameters = parameter
+            });
+
+            return queryStrategy.MainDataTable;
+        }
+
+        private async Task InsertResidentContactTrace() {
             await Task.Run(() => {
                 List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
                 parameter.Add(new KeyValuePair<string, string>("@m_resident_key", ResidentId));
@@ -200,7 +279,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_temperature", Temperature));
                 parameter.Add(new KeyValuePair<string, string>("@m_has_coughs", HasCoughs));
                 parameter.Add(new KeyValuePair<string, string>("@m_has_colds", HasColds));
-                parameter.Add(new KeyValuePair<string, string>("@m_has_fever", HasFever));
+                parameter.Add(new KeyValuePair<string, string>("@m_has_fever", "N/A"));
 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new InsertQuery() {

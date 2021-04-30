@@ -286,11 +286,12 @@
                               HorizontalContentAlignment="Center"
                               FontSize="18"
                               FontFamily="Montserrat Semibold"
+                              IsEnabled="{Binding AllowPortChange}"
                               SelectedValue="{Binding CurrentItem, UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding PortList}"
                               VerticalAlignment="Bottom"
                               Margin="153,0,48,68" />
-                    <Button VerticalAlignment="Bottom"
+                    <Button x:Name="SerialButton" VerticalAlignment="Bottom"
                             Margin="180,0,48,20"
                             IsEnabled="{Binding SerialButtonEnable}"
                             Content="{Binding ConnectionState}"
