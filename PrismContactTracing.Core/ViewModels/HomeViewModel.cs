@@ -1,5 +1,4 @@
 ﻿using Prism.Commands;
-using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using PrismContactTracing.Core.DataComponent;
@@ -28,12 +27,12 @@ namespace PrismContactTracing.Core.ViewModels {
         private Visibility _logVisibility;
         private string _serialLog;
         private bool _allowPortChange;
+        private string _connectionState;
 
         public DelegateCommand<string> ConnectPortCommand { get; private set; }
         public DelegateCommand<string> NavigateToCommand { get; private set; }
         public DelegateCommand ExecuteLogoutCommand { get; private set; }
         public DelegateCommand ExecuteConfirmCommand { get; private set; }
-        public string ConnectionState { get; private set; }
         public string ResidentId { get; private set; }
         public string Temperature { get; private set; }
         public string FirstName { get; private set; }
@@ -42,12 +41,15 @@ namespace PrismContactTracing.Core.ViewModels {
         public string HasColds { get; private set; }
         public string HasFever { get; private set; }
         public string TimeIn { get; private set; }
-        
+
+        public string ConnectionState { 
+            get => _connectionState; 
+            set { SetProperty(ref _connectionState, value); RaisePropertyChanged("ConnectionState"); } 
+        }
+
         public string SerialLog {
             get => _serialLog; 
-            set {
-                SetProperty(ref _serialLog, value);
-            } 
+            set { SetProperty(ref _serialLog, value); RaisePropertyChanged("SerialLog"); } 
         }
 
         public string CurrentItem { 
@@ -68,33 +70,27 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public Visibility LogVisibility {
             get => _logVisibility;
-            set {
-                SetProperty(ref _logVisibility, value); 
-            }
+            set { SetProperty(ref _logVisibility, value); RaisePropertyChanged("LogVisibility"); }
         }
 
         public bool AllowPortChange {
             get => _allowPortChange;
-            set {
-                SetProperty(ref _allowPortChange, value);
-            }
+            set { SetProperty(ref _allowPortChange, value); RaisePropertyChanged("AllowPortChange"); }
         }
 
         public bool SerialButtonEnable {
             get => _serialButtonEnable;
-            set {
-                SetProperty(ref _serialButtonEnable, value);
-            }
+            set { SetProperty(ref _serialButtonEnable, value); RaisePropertyChanged("SerialButtonEnable"); }
         }
 
         public string RealTimeDateLog {
             get => _realTimeDateLog;
-            set { SetProperty(ref _realTimeDateLog, value); }
+            set { SetProperty(ref _realTimeDateLog, value); RaisePropertyChanged("RealTimeDateLog"); }
         }
 
         public string RealTimeLog {
             get => _realTimeLog;
-            set { SetProperty(ref _realTimeLog, value); } 
+            set { SetProperty(ref _realTimeLog, value); RaisePropertyChanged("RealTimeLog"); } 
         }
 
         public bool ShowConfirmDialog {
@@ -131,7 +127,6 @@ namespace PrismContactTracing.Core.ViewModels {
             _serialPort = new SerialPort();
 
             AllowPortChange = true;
-            RaisePropertyChanged("AllowPortChange");
         }
 
         private void StartListen(string port) {
@@ -146,7 +141,6 @@ namespace PrismContactTracing.Core.ViewModels {
                 _serialPort.DataReceived += RefreshTraceLog;
 
                 SerialButtonEnable = !SerialButtonEnable;
-                RaisePropertyChanged("SerialButtonEnable");
 
                 _dataListener.StartWaitForTimeOutComPort();
                 DataListener.OnSerialReadEvent += ConnectionTimeOut;
@@ -155,17 +149,11 @@ namespace PrismContactTracing.Core.ViewModels {
                 _serialPort.DataReceived -= RefreshTraceLog;
 
                 SerialLog = "Disconnected";
-                RaisePropertyChanged("SerialLog");
             }
 
             LogVisibility = _serialPort.IsOpen ? Visibility.Visible : Visibility.Hidden;
-            RaisePropertyChanged("LogVisibility");
-
             ConnectionState = _serialPort.IsOpen ? "Disconnect" : "Connect";
-            RaisePropertyChanged("ConnectionState");
-
             AllowPortChange = !_serialPort.IsOpen;
-            RaisePropertyChanged("AllowPortChange");
         }
 
         private void ConnectionTimeOut() {
@@ -173,10 +161,8 @@ namespace PrismContactTracing.Core.ViewModels {
             StartListen(_serialPort.PortName);
 
             SerialButtonEnable = !SerialButtonEnable;
-            RaisePropertyChanged("SerialButtonEnable");
 
             SerialLog = "Invalid port";
-            RaisePropertyChanged("SerialLog");
         }
 
         private void RefreshTraceLog(object sender, SerialDataReceivedEventArgs e) {
@@ -185,10 +171,8 @@ namespace PrismContactTracing.Core.ViewModels {
 
             if (indata.ToLower().Contains("connected")) {
                 SerialLog = "Connected";
-                RaisePropertyChanged("SerialLog");
 
                 SerialButtonEnable = !SerialButtonEnable;
-                RaisePropertyChanged("SerialButtonEnable");
 
                 // No need to run timeout check since we are already connected
                 _dataListener.CancelWaitForTimeOutComPort();
@@ -196,7 +180,7 @@ namespace PrismContactTracing.Core.ViewModels {
             }
 
             // We are expecting value like this
-            // QR:FirstName,LastName,Purok,ContactNumber,Address,EContact,EName
+            // QR:FirstName,LastName,Purok,Address,ContactNumber,EContact,EName
             if (indata.Contains("QR")) {
                 string qrData = indata.Replace("QR:", "");
 
@@ -216,13 +200,10 @@ namespace PrismContactTracing.Core.ViewModels {
 
             if (indata.Contains("TEMP:")) {
                 Temperature = indata.Split(":")[1];
-                RaisePropertyChanged("Temperature");
             } else if (indata.Contains("COLD:")) {
                 HasColds = indata.Split(":")[1];
-                RaisePropertyChanged("HasColds");
             } else if (indata.Contains("COUGH:")) {
                 HasCoughs = indata.Split(":")[1];
-                RaisePropertyChanged("HasCoughs");
 
                 // I did not find any fever check only last one checked is cough.
                 // Then shoud insert after cough check.
@@ -241,9 +222,7 @@ namespace PrismContactTracing.Core.ViewModels {
         private void TimerTick(object sender, EventArgs e) {
             string timeInfo = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
             _realTimeLog = timeInfo.Split(' ')[1] + timeInfo.Split(' ')[2];
-            RaisePropertyChanged("RealTimeLog");
             _realTimeDateLog = timeInfo.Split(' ')[0];
-            RaisePropertyChanged("RealTimeDateLog");
         }
 
         private DataTable CheckResident(string qrData) {

@@ -1,9 +1,6 @@
 ﻿using PrismContactTracing.Core.DataComponent;
-using PrismContactTracing.Core.Models;
-using System;
 using System.ComponentModel;
 using System.Threading;
-using System.IO.Ports;
 
 namespace PrismContactTracing.Core.Listener {
     public class DataListener : IDataListener {
@@ -48,11 +45,6 @@ namespace PrismContactTracing.Core.Listener {
 
         public void CancelWaitForTimeOutComPort() {
             _backgroundWorkerForSerialListener.CancelAsync();
-        }
-
-        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e) {
-            SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadExisting();
         }
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs e) {

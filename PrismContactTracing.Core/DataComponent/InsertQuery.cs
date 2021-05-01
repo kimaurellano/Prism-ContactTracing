@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using PrismContactTracing.Core.Interface;
 using System.Collections.Generic;
 using System.Data;
