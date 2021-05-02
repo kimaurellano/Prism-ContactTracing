@@ -63,9 +63,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public ObservableCollection<string> PortList { 
             get => _portList;
-            set { 
-                SetProperty(ref _portList, value);
-            }
+            set {  SetProperty(ref _portList, value); }
         }
 
         public Visibility LogVisibility {
@@ -221,8 +219,8 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void TimerTick(object sender, EventArgs e) {
             string timeInfo = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
-            _realTimeLog = timeInfo.Split(' ')[1] + timeInfo.Split(' ')[2];
-            _realTimeDateLog = timeInfo.Split(' ')[0];
+            RealTimeLog = timeInfo.Split(' ')[1] + timeInfo.Split(' ')[2];
+            RealTimeDateLog = timeInfo.Split(' ')[0];
         }
 
         private DataTable CheckResident(string qrData) {
