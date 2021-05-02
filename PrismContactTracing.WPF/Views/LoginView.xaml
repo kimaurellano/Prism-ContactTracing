@@ -48,8 +48,8 @@
                TargetType="{x:Type Border}">
             <Setter Property="Background">
                 <Setter.Value>
-                    <SolidColorBrush Color="#000000"
-                                     Opacity="0.1" />
+                    <SolidColorBrush Color="#FFFFFF"
+                                     Opacity="1" />
                 </Setter.Value>
             </Setter>
             <Setter Property="CornerRadius">
@@ -86,7 +86,6 @@
                     HorizontalAlignment="Center">
             <TextBlock Text="Login"
                        HorizontalAlignment="Center"
-                       TextBlock.Foreground="#FFFFFF"
                        FontFamily="Montserrat Semibold"
                        FontSize="38"
                        FontWeight="Regular"
@@ -98,7 +97,6 @@
                      materialDesign:HintAssist.FloatingScale="0.8"
                      materialDesign:HintAssist.IsFloating="True"
                      materialDesign:HintAssist.HelperTextFontSize="20"
-                     Foreground="#FFFFFF"
                      FontFamily="Montserrat"
                      FontSize="18"
                      MinHeight="50"
@@ -111,7 +109,6 @@
                          materialDesign:HintAssist.FloatingScale="0.8"
                          materialDesign:HintAssist.IsFloating="True"
                          materialDesign:HintAssist.HelperTextFontSize="20"
-                         Foreground="#FFFFFF"
                          HorizontalAlignment="Center"
                          FontFamily="Montserrat"
                          FontSize="18"
@@ -119,18 +116,17 @@
                          Height="50"
                          Width="267"
                          Margin="0,80,0,0" />
-            <Button Content="LOGIN"
-                    Style="{StaticResource CustomMaterialDesignFlatButton}"
+            <Button Content="Continue"
+                    Foreground="#2A9134"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
                     Command="{Binding ExecuteGenericDelegateCommand}"
                     CommandParameter="{Binding ElementName=txtPassword}"
                     IsDefault="True"
                     materialDesign:ButtonAssist.CornerRadius="25"
-                    Background="#FFFFFF"
-                    Foreground="#4F4F4F"
                     VerticalAlignment="Bottom"
                     BorderThickness="0"
                     FontFamily="Montserrat Semibold"
-                    FontSize="22"
+                    FontSize="18"
                     Height="50"
                     Width="150"
                     Margin="0,70,0,0" />

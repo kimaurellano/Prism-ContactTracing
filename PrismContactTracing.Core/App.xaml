@@ -10,7 +10,9 @@
                     Primary colour = seen in input fields 
                     Secondary colour = seen in ???
                 -->
-                <materialDesign:CustomColorTheme BaseTheme="Dark" PrimaryColor="#FFFFFF" SecondaryColor="#2A9134" />
+                <materialDesign:CustomColorTheme BaseTheme="Dark" 
+                                                 PrimaryColor="#2A9134" 
+                                                 SecondaryColor="#FFFFFF" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
