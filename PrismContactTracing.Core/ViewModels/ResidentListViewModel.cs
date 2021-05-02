@@ -324,8 +324,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_purok", _purok));
                 parameter.Add(new KeyValuePair<string, string>("@m_address", _address));
                 parameter.Add(new KeyValuePair<string, string>("@m_contactnumber", _contactNumber));
-                parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", Format(_eName)));
-                parameter.Add(new KeyValuePair<string, string>("@m_econtactname", _eContact));
+                parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", _eContact));
+                parameter.Add(new KeyValuePair<string, string>("@m_econtactname", Format(_eName)));
 
                 // Clear fields after insertion
                 FirstName = string.Empty;

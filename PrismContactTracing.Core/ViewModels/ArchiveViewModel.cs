@@ -145,7 +145,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 queryStrategy.SetQuery(new CheckForMarks() {
                     Procedure = "RestoreArchive",
                     TargetDataTable = MainDataTable,
-                    ParameterName = "@m_archive_key"
+                    ParameterName = "@m_archive_key",
+                    MarkType = CheckForMarks.Mark.Restore
                 });
 
                 Task.Run(() => LoadArchives(string.Empty));
