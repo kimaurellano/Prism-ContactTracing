@@ -312,7 +312,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private async Task InsertResident() {
             await Task.Run(() => {
-                if (!Validate(ContactNumber)) {
+                if (!Validate(ContactNumber) || !Validate(EContact)) {
                     return;
                 }
 
@@ -384,7 +384,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private string Format(string text) {
             string firstChar = text.Substring(0, 1).ToUpper();
-            string noFirstChar = text.Substring(1, text.Length).ToLower();
+            string noFirstChar = text.Substring(1, text.Length - 1).ToLower();
 
             return firstChar + noFirstChar;
         }
