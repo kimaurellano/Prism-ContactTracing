@@ -49,6 +49,8 @@ namespace PrismContactTracing.Core.DataComponent {
                 if (Procedure == "GetResident" || Procedure == "GetResidentsList") {
                     _dataTable.Columns.Add("Mark for archive", typeof(bool));
                     _dataTable.Columns["Mark for archive"].DefaultValue = false;
+                    _dataTable.Columns.Add("Generate QR", typeof(bool));
+                    _dataTable.Columns["Generate QR"].DefaultValue = false;
                 } else if (Procedure.Contains("GetArchive")) {
                     _dataTable.Columns.Add("Mark for restore", typeof(bool));
                     _dataTable.Columns["Mark for restore"].DefaultValue = false;

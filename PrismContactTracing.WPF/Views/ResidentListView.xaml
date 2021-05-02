@@ -143,6 +143,11 @@
                                  Width="397"
                                  Margin="0,30,0,0" />
                     </StackPanel>
+                    <TextBlock Text="{Binding InputWarning}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Center"
+                               Margin="0,30,0,0"
+                               Foreground="#FD0000" />
                     <Button Content="Submit"
                             IsEnabled="{Binding IsAllFieldsComplete}"
                             Command="{Binding ExecuteInsertCommand}"
@@ -204,14 +209,14 @@
                               CanUserAddRows="False"
                               SelectionMode="Extended"
                               SelectionUnit="FullRow"
-                              Cursor="{Binding CursorType}" 
-                              CanUserResizeRows="False"/>
+                              Cursor="{Binding CursorType}"
+                              CanUserResizeRows="False" />
                 </Grid>
             </StackPanel>
         </materialDesign:DialogHost>
         <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
-                                   HorizontalAlignment="Stretch"
-                                   CloseOnClickAway="True">
+                                   CloseOnClickAway="True"
+                                   Margin="20,0,-20,0">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Margin="10"
                             Width="150"
@@ -305,9 +310,9 @@
                          Foreground="#000000"
                          Margin="50,825,0,0" />
         <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
-                Margin="0,0,50,175"
+                Margin="365,0,0,175"
                 Background="#DEDEDE"
                 Command="{Binding ExecuteRefreshCommand}">
             <materialDesign:PackIcon Kind="Refresh"
@@ -317,5 +322,15 @@
                                      Height="32"
                                      Foreground="Black" />
         </Button>
+        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Content="Generate QR"
+                Background="White"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Width="140"
+                Margin="439,800,578,0"
+                Command="{Binding ExecuteGenerateQRCommand}" />
     </Grid>
 </UserControl>

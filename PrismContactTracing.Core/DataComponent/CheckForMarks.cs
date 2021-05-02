@@ -12,6 +12,11 @@ namespace PrismContactTracing.Core.DataComponent {
     /// </summary>
     public class CheckForMarks : IQueryStrategy {
 
+        public enum Mark {
+            Archive = 2,
+            QR = 1
+        }
+
         private DbConnector _dbConnector;
 
         public string ParameterName { get; set; }
@@ -21,22 +26,36 @@ namespace PrismContactTracing.Core.DataComponent {
         /// DataTable SHOULD HAVE "Marked for" column
         /// </summary>
         public DataTable TargetDataTable { get; set; }
+        /// <summary>
+        /// Which (column.count - x) position will be checked
+        /// </summary>
+        public Mark MarkType { get; set; }
+        public List<string> RowDatas { get; private set; }
 
         public CheckForMarks() {
             _dbConnector = new DbConnector();
+            RowDatas = new List<string>();
         }
 
         public DataTable DoQuery() {
             _dbConnector.Connect();
 
-            
             List<string> keys = new List<string>();
             if(TargetDataTable != null) {
                 // When target table is supplied for checking
                 for (int i = 0; i < TargetDataTable.Rows.Count; i++) {
-                    // Rows marked for delete
-                    if ((bool)TargetDataTable.Rows[i].ItemArray[TargetDataTable.Columns.Count - 1]) {
+                    // Check marked rows and of which mark type
+                    if ((bool)TargetDataTable.Rows[i].ItemArray[TargetDataTable.Columns.Count - (int)MarkType]) {
                         keys.Add(TargetDataTable.Rows[i][TargetDataTable.Columns[0].ColumnName].ToString());
+                        
+                        if(MarkType == Mark.QR) {
+                            string residentQRInfo = string.Empty;
+                            for (int j = 1; j <= 7; j++) {
+                                residentQRInfo += TargetDataTable.Rows[i].ItemArray[j].ToString() + ",";
+                            }
+
+                            RowDatas.Add(residentQRInfo.Remove(residentQRInfo.Length - 1));
+                        }
                     }
                 }
             } else {
@@ -44,6 +63,12 @@ namespace PrismContactTracing.Core.DataComponent {
                 foreach (var value in ParameterValues) {
                     keys.Add(value);
                 }
+            }
+
+            // Procedure not supplied means TargetDataTable is the only needed.
+            // No need to query from server
+            if (Procedure == string.Empty || Procedure == null) {
+                return null;
             }
 
             // Do query for how many rows are changed   

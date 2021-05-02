@@ -2,9 +2,14 @@
 using Prism.Mvvm;
 using PrismContactTracing.Core.DataComponent;
 using PrismContactTracing.Core.Listener;
+using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,12 +37,14 @@ namespace PrismContactTracing.Core.ViewModels {
         private bool _isEnableEdit = false;
         private bool _isSavingEnable = false;
         private float _spinnerEnable = 0f;
-        private Visibility _isVisible;
         private bool _isRegisterDialogOpen;
         private bool _showConfirmDialog;
         private bool _isAllFieldsComplete;
+        private Visibility _isVisible;
+        private string _inputWarning;
 
         #region Delegates
+        public DelegateCommand ExecuteGenerateQRCommand { get; private set; }
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
         public DelegateCommand ExecuteRegistrationDialogCommand { get; private set; }
@@ -66,6 +73,11 @@ namespace PrismContactTracing.Core.ViewModels {
         public DataTable MainDataTable {
             get => _mainTable;
             set { SetProperty(ref _mainTable, value); }
+        }
+
+        public string InputWarning {
+            get => _inputWarning;
+            set { SetProperty(ref _inputWarning, value); RaisePropertyChanged("InputWarning"); }
         }
 
         public string ResidentName {
@@ -121,7 +133,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
         public bool IsAllFieldsComplete {
             get => _isAllFieldsComplete;
-            set { SetProperty(ref _isAllFieldsComplete, value); }
+            set { SetProperty(ref _isAllFieldsComplete, value); RaisePropertyChanged("IsAllFieldsComplete"); }
         }
 
         public DataRowView ResidentDataRowView {
@@ -139,6 +151,7 @@ namespace PrismContactTracing.Core.ViewModels {
             Task.Run(() => LoadResidentList(string.Empty));
             Task.Run(() => CheckRetention());
 
+            ExecuteGenerateQRCommand = new DelegateCommand(async () => await GenerateQR());
             ExecuteRefreshCommand = new DelegateCommand(RefreshTable);
             ExecuteArchiveResidentCommand = new DelegateCommand(async () => await ArchiveRecord());
             ExecuteShowConfirmDialogCommand = new DelegateCommand(() => { ShowConfirmDialog = !ShowConfirmDialog; });
@@ -150,11 +163,44 @@ namespace PrismContactTracing.Core.ViewModels {
             ExecuteGenericDelegateOpenDialogCommand = new DelegateCommand(() => { IsRegisterDialogOpen = !IsRegisterDialogOpen; });
         }
 
+        private async Task GenerateQR() {
+            await Task.Run(() => {
+                CheckForMarks checkForMarks = new CheckForMarks() {
+                    TargetDataTable = MainDataTable,
+                    MarkType = CheckForMarks.Mark.QR
+                };
+
+                checkForMarks.DoQuery();
+
+                string path = string.Empty;
+                foreach (var item in checkForMarks.RowDatas) {
+                    // TODO: PNG Generation function
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(item, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(10);
+
+                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDoc‌​uments), "ContactTracerQR");
+
+                    if (!Directory.Exists(path)) {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fileName = $"{item.Split(',')[0]}_{item.Split(',')[1]}_{DateTimeOffset.Now.ToUnixTimeSeconds()}.png";
+                    qrCodeImage.Save($"{path}\\{fileName}", ImageFormat.Png);
+                }
+
+                Show($"({checkForMarks.RowDatas.Count})QR Generated.", 2000);
+
+                // Open qr location
+                Process.Start("explorer.exe", path);
+            });
+        }
+
         private void CheckFields() {
-            _isAllFieldsComplete = (
+            IsAllFieldsComplete = (
                 FirstName != null && LastName != null && Purok != null && Address != null && ContactNumber != null && EName != null && EContact != null &&
                 FirstName != string.Empty && LastName != string.Empty && Purok != string.Empty && Address != string.Empty && ContactNumber != string.Empty && EName != string.Empty && EContact != string.Empty);
-            RaisePropertyChanged("IsAllFieldsComplete");
         }
 
         private async Task CheckRetention() {
@@ -220,7 +266,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 queryStrategy.SetQuery(new CheckForMarks() {
                     TargetDataTable = MainDataTable,
                     Procedure = "ArchiveResident",
-                    ParameterName = "@m_key"
+                    ParameterName = "@m_key",
+                    MarkType = CheckForMarks.Mark.Archive
                 });
 
                 Task.Run(() => LoadResidentList(string.Empty));
@@ -265,15 +312,19 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private async Task InsertResident() {
             await Task.Run(() => {
+                if (!Validate(ContactNumber)) {
+                    return;
+                }
+
                 SpinnerEnable = 1f;
 
                 List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
-                parameter.Add(new KeyValuePair<string, string>("@m_firstname", _firstName));
-                parameter.Add(new KeyValuePair<string, string>("@m_lastname", _lastName));
+                parameter.Add(new KeyValuePair<string, string>("@m_firstname", Format(_firstName)));
+                parameter.Add(new KeyValuePair<string, string>("@m_lastname", Format(_lastName)));
                 parameter.Add(new KeyValuePair<string, string>("@m_purok", _purok));
                 parameter.Add(new KeyValuePair<string, string>("@m_address", _address));
                 parameter.Add(new KeyValuePair<string, string>("@m_contactnumber", _contactNumber));
-                parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", _eName));
+                parameter.Add(new KeyValuePair<string, string>("@m_econtactnumber", Format(_eName)));
                 parameter.Add(new KeyValuePair<string, string>("@m_econtactname", _eContact));
 
                 // Clear fields after insertion
@@ -329,6 +380,29 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void RefreshTable() {
             Task.Run(() => LoadResidentList(string.Empty));
+        }
+
+        private string Format(string text) {
+            string firstChar = text.Substring(0, 1).ToUpper();
+            string noFirstChar = text.Substring(1, text.Length).ToLower();
+
+            return firstChar + noFirstChar;
+        }
+
+        private bool Validate(string input) {
+            bool hasNonDigit = false;
+            foreach (char character in input.ToCharArray()) {
+                if (!char.IsDigit(character)) {
+                    hasNonDigit = true;
+                }
+            }
+
+            if (!input.Substring(0, 2).Equals("09") || input.Length != 11 || hasNonDigit) {
+                InputWarning = "Invalid contact number format. Please use 11-digit 09xxxxxxxxx.";
+                return false;
+            }
+
+            return true;
         }
     }
 }
