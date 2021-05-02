@@ -6,16 +6,21 @@
     <UseWPF>true</UseWPF>
     <StartupObject>PrismContactTracing.Core.App</StartupObject>
     <AssemblyName>PrismContactTracingApp</AssemblyName>
-    <ApplicationIcon>Resource\sample.ico</ApplicationIcon>
+    <ApplicationIcon>Resource\Logo_Barangay.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
+    <Version>0.9</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resource\Conf.xml" />
+    <None Remove="Resource\Logo_Barangay.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resource\Conf.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\Logo_Barangay.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
