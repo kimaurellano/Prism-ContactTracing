@@ -351,6 +351,11 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void UpdateDb() {
             QueryStrategy queryStrategy = new QueryStrategy();
+
+            // Avoid always-mismatch datatable
+            MainDataTable.Columns.Remove("Mark for archive");
+            MainDataTable.Columns.Remove("Generate QR");
+
             queryStrategy.SetQuery(new UpdateQuery() { Procedure = "GetResidentsList", TargetDataTable = MainDataTable });
 
             Task.Run(() => LoadResidentList(string.Empty));
