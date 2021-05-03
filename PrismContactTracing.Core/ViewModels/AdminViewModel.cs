@@ -25,15 +25,17 @@ namespace PrismContactTracing.Core.ViewModels {
         private Visibility _isVisible;
         private bool _isRegisterDialogOpen;
         private bool _showConfirmDialog;
+        private bool _isAllFieldsComplete;
+        private string _inputWarning;
+        private string _firstName;
+        private string _lastName;
+        private string _address;
+        private string _contactNumber;
+        private string _password;
+        private string _username;
+        private string _level;
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Address { get; set; }
-        public string ContactNumber { get; set; }
-        public string Password { get; set; }
-        public string Username { get; set; }
-        public string Level { get; set; }
-
+        #region Delegates
         public DelegateCommand AddNewResidentCommand { get; private set; }
         public DelegateCommand ExecuteLoadResidentListCommand { get; private set; }
         public DelegateCommand ExecuteRegistrationDialogCommand { get; private set; }
@@ -46,6 +48,21 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand ExecuteDeleteAdminCommand { get; private set; }
         public DelegateCommand ExecuteShowConfirmDialogCommand { get; private set; }
         public DelegateCommand ExecuteInsertCommand { get; private set; }
+        #endregion Delegates
+
+        #region GetterSetter
+        public string FirstName { get => _firstName; set { SetProperty(ref _firstName, value); CheckFields(); } }
+        public string LastName { get => _lastName; set { SetProperty(ref _lastName, value); CheckFields(); } }
+        public string Address { get => _address; set { SetProperty(ref _address, value); CheckFields(); } }
+        public string ContactNumber { get => _contactNumber; set { SetProperty(ref _contactNumber, value); CheckFields(); } }
+        public string Password { get => _password; set { SetProperty(ref _password, value); CheckFields(); } }
+        public string Username { get => _username; set { SetProperty(ref _username, value); CheckFields(); } }
+        public string Level { get => _level; set { SetProperty(ref _level, value); CheckFields(); } }
+
+        public string InputWarning {
+            get => _inputWarning;
+            set { SetProperty(ref _inputWarning, value); RaisePropertyChanged("InputWarning"); }
+        }
 
         public DataTable MainDataTable {
             get => _mainTable;
@@ -90,7 +107,7 @@ namespace PrismContactTracing.Core.ViewModels {
         // Visual representation if datagrid row can be selected 
         public Cursor CursorType {
             get => _cursorType;
-            set { SetProperty(ref _cursorType, value); }
+            set { SetProperty(ref _cursorType, value); RaisePropertyChanged("CursorType"); }
         }
 
         public string NotifMessage {
@@ -107,6 +124,12 @@ namespace PrismContactTracing.Core.ViewModels {
             get => _residentDataRowView;
             set { SetProperty(ref _residentDataRowView, value); }
         }
+
+        public bool IsAllFieldsComplete {
+            get => _isAllFieldsComplete;
+            set { SetProperty(ref _isAllFieldsComplete, value); RaisePropertyChanged("IsAllFieldsComplete"); }
+        }
+        #endregion GetterSetter
 
         public AdminViewModel(IDataListener dataListener) {
             _dataListener = dataListener;
@@ -125,6 +148,12 @@ namespace PrismContactTracing.Core.ViewModels {
             ExecuteLoadAdminsCommand = new DelegateCommand<object>(async (p) => await LoadAdmins());
         }
 
+        private void CheckFields() {
+            IsAllFieldsComplete = (
+                FirstName != null && LastName != null && Address != null && ContactNumber != null && Password != null && Username != null &&
+                FirstName != string.Empty && LastName != string.Empty && Address != string.Empty && ContactNumber != string.Empty && Password != string.Empty && Username != string.Empty);
+        }
+
         private async Task DeleteAdmin() {
             await Task.Run(() => {
                 ShowConfirmDialog = !ShowConfirmDialog;
@@ -133,7 +162,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 queryStrategy.SetQuery(new CheckForMarks() {
                     TargetDataTable = MainDataTable,
                     Procedure = "DeleteAdmin",
-                    ParameterName = "@m_key"
+                    ParameterName = "@m_key",
+                    MarkType = CheckForMarks.Mark.Delete
                 });
 
                 Task.Run(() => LoadAdmins());
@@ -144,8 +174,7 @@ namespace PrismContactTracing.Core.ViewModels {
             await Task.Run(() => {
                 SpinnerEnable = 1f;
 
-                _cursorType = Cursors.Hand;
-                RaisePropertyChanged("CursorType");
+                CursorType = Cursors.Hand;
 
                 IsVisible = Visibility.Visible;
                 IsReadOnlyDataGrid = true;
@@ -171,6 +200,10 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private async Task InsertAdmin() {
             await Task.Run(() => {
+                if (!Validate(ContactNumber)) {
+                    return;
+                }
+
                 SpinnerEnable = 1f;
 
                 IsRegisterDialogOpen = !IsRegisterDialogOpen;
@@ -225,6 +258,29 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void RefreshTable() {
             Task.Run(() => LoadAdmins());
+        }
+
+        private string Format(string text) {
+            string firstChar = text.Substring(0, 1).ToUpper();
+            string noFirstChar = text.Substring(1, text.Length - 1).ToLower();
+
+            return firstChar + noFirstChar;
+        }
+
+        private bool Validate(string input) {
+            bool hasNonDigit = false;
+            foreach (char character in input.ToCharArray()) {
+                if (!char.IsDigit(character)) {
+                    hasNonDigit = true;
+                }
+            }
+
+            if (!input.Substring(0, 2).Equals("09") || input.Length != 11 || hasNonDigit) {
+                InputWarning = "Invalid contact number format. Please use 11-digit 09xxxxxxxxx.";
+                return false;
+            }
+
+            return true;
         }
     }
 }

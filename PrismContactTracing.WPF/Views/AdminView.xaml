@@ -29,7 +29,7 @@
                                Margin="15,0,0,0" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-                        <TextBox Text="{Binding Username, Mode=TwoWay}"
+                        <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="Username"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -44,7 +44,7 @@
                                  Height="60"
                                  Width="397"
                                  Margin="0,50,70,0" />
-                        <TextBox Text="{Binding Password, Mode=TwoWay}"
+                        <TextBox Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="Password"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -60,7 +60,7 @@
                                  Width="397"
                                  Margin="0,50,0,0" />
                     </StackPanel>
-                    <TextBox Text="{Binding Level, Mode=TwoWay}"
+                    <TextBox Text="{Binding Level, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{DynamicResource MaterialDesignFilledTextBox}"
                              materialDesign:HintAssist.Hint="Level"
                              materialDesign:HintAssist.FloatingScale="0.8"
@@ -75,7 +75,7 @@
                              Height="60"
                              Width="863"
                              Margin="0,50,0,0" />
-                    <TextBox Text="{Binding Address, Mode=TwoWay}"
+                    <TextBox Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{DynamicResource MaterialDesignFilledTextBox}"
                              materialDesign:HintAssist.Hint="Address"
                              materialDesign:HintAssist.FloatingScale="0.8"
@@ -90,7 +90,7 @@
                              Height="60"
                              Width="863"
                              Margin="0,50,0,0" />
-                    <TextBox Text="{Binding ContactNumber, Mode=TwoWay}"
+                    <TextBox Text="{Binding ContactNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{DynamicResource MaterialDesignFilledTextBox}"
                              materialDesign:HintAssist.Hint="Contact number"
                              materialDesign:HintAssist.FloatingScale="0.8"
@@ -107,7 +107,7 @@
                              Margin="0,50,0,0" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-                        <TextBox Text="{Binding FirstName, Mode=TwoWay}"
+                        <TextBox Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="First Name"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -122,7 +122,7 @@
                                  Height="60"
                                  Width="397"
                                  Margin="0,30,70,0" />
-                        <TextBox Text="{Binding LastName, Mode=TwoWay}"
+                        <TextBox Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{DynamicResource MaterialDesignFilledTextBox}"
                                  materialDesign:HintAssist.Hint="Last Name"
                                  materialDesign:HintAssist.FloatingScale="0.8"
@@ -138,8 +138,14 @@
                                  Width="397"
                                  Margin="0,30,0,0" />
                     </StackPanel>
+                    <TextBlock Text="{Binding InputWarning}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Center"
+                               Margin="0,30,0,0"
+                               Foreground="#FD0000" />
                     <Button Content="Submit"
                             Command="{Binding ExecuteInsertCommand}"
+                            IsEnabled="{Binding IsAllFieldsComplete}"
                             Margin="0,30,0,0"
                             Width="200"
                             Height="50" />
