@@ -15,7 +15,7 @@
         <Style x:Key="MainBG"
                TargetType="StackPanel">
             <Setter Property="Background">
-                <Setter.Value>
+                <!--<Setter.Value>
                     <LinearGradientBrush StartPoint="0,1"
                                          EndPoint="1,0">
                         <GradientStop Color="#23765A"
@@ -23,6 +23,9 @@
                         <GradientStop Color="#4F9847"
                                       Offset="1.0" />
                     </LinearGradientBrush>
+                </Setter.Value>-->
+                <Setter.Value>
+                    <SolidColorBrush Color="#55A955" />
                 </Setter.Value>
             </Setter>
         </Style>
@@ -94,54 +97,54 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Top"
                                    Margin="0,50,0,0" />
-                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
                                 Content="ADMIN"
                                 Height="45"
                                 Foreground="#23765A"
                                 TextBlock.FontFamily="Montserrat Semibold"
                                 TextBlock.FontSize="20"
                                 Background="White"
-                                Margin="20,10,20,0"
+                                Margin="40,10,40,0"
                                 Command="{Binding NavigateToCommand}"
                                 CommandParameter="AdminView" />
-                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
                                 Content="RESIDENTS"
                                 Height="45"
                                 Foreground="#23765A"
                                 TextBlock.FontFamily="Montserrat Semibold"
                                 TextBlock.FontSize="20"
                                 Background="White"
-                                Margin="20,15,20,0"
+                                Margin="40,15,40,0"
                                 Command="{Binding NavigateToCommand}"
                                 CommandParameter="ResidentListView" />
-                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
                                 Content="REPORT"
                                 Height="45"
                                 Foreground="#23765A"
                                 TextBlock.FontFamily="Montserrat Semibold"
                                 TextBlock.FontSize="20"
                                 Background="White"
-                                Margin="20,15,20,0"
+                                Margin="40,15,40,0"
                                 Command="{Binding NavigateToCommand}"
                                 CommandParameter="ResidentReportView" />
-                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
                                 Content="ARCHIVE"
                                 Height="45"
                                 Foreground="#23765A"
                                 TextBlock.FontFamily="Montserrat Semibold"
                                 TextBlock.FontSize="20"
                                 Background="White"
-                                Margin="20,15,20,0"
+                                Margin="40,15,40,0"
                                 Command="{Binding NavigateToCommand}"
                                 CommandParameter="ArchiveView" />
-                        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+                        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
                                 Content="LOG OUT"
                                 Height="45"
                                 Foreground="#23765A"
                                 TextBlock.FontFamily="Montserrat Semibold"
                                 TextBlock.FontSize="20"
                                 Background="White"
-                                Margin="20,495,20,0"
+                                Margin="40,495,40,0"
                                 Command="{Binding ExecuteLogoutCommand}" />
                         <TextBlock Text="{Binding RealTimeDateLog, Mode=TwoWay}"
                                    FontFamily="Montserrat Semibold"
@@ -291,7 +294,7 @@
                               ItemsSource="{Binding PortList}"
                               VerticalAlignment="Bottom"
                               Margin="153,0,48,68" />
-                    <Button x:Name="SerialButton" VerticalAlignment="Bottom"
+                    <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" x:Name="SerialButton" VerticalAlignment="Bottom"
                             Margin="180,0,48,20"
                             IsEnabled="{Binding SerialButtonEnable}"
                             Content="{Binding ConnectionState}"

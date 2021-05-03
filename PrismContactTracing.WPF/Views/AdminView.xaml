@@ -13,13 +13,88 @@
              d:DesignHeight="900"
              d:DesignWidth="1157">
     <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="10,50,10,10">
+                <TextBlock Text="Admin list"
+                           Foreground="White"
+                           FontSize="18"
+                           FontFamily="Montserrat SemiBold"
+                           FontWeight="Regular"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Right" />
+            </Grid>
+            <Grid Height="790">
+                <DataGrid x:Name="MainGrid"
+                          ItemsSource="{Binding MainDataTable}"
+                          SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
+                          IsReadOnly="False"
+                          CanUserAddRows="False"
+                          SelectionMode="Extended"
+                          SelectionUnit="FullRow"
+                          Cursor="{Binding CursorType}"
+                          CanUserResizeRows="False" />
+            </Grid>
+        </StackPanel>
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Content="Delete"
+                Background="White"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Width="140"
+                Margin="601,800,416,0"
+                Command="{Binding ExecuteShowConfirmDialogCommand}" />
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Width="150"
+                Content="Update"
+                Background="White"
+                Command="{Binding ExecuteApplyUpdateCommand}"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Margin="760,800,247,0" />
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Width="150"
+                Content="Register"
+                Background="White"
+                Command="{Binding ExecuteRegistrationDialogCommand}"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Margin="932,800,75,0" />
+        <fa:ImageAwesome Icon="CircleOutlineNotch"
+                         Spin="True"
+                         Opacity="{Binding SpinnerEnable}"
+                         SpinDuration="2"
+                         Height="25"
+                         Width="25"
+                         VerticalAlignment="Top"
+                         HorizontalAlignment="Left"
+                         Foreground="#000000"
+                         Margin="50,825,0,0" />
+        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="0,0,50,175"
+                Background="#DEDEDE"
+                Command="{Binding ExecuteRefreshCommand}">
+            <materialDesign:PackIcon Kind="Refresh"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Width="32"
+                                     Height="32"
+                                     Foreground="Black" />
+        </Button>
+        
         <!-- Registration -->
         <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
                                    CloseOnClickAway="True"
                                    HorizontalAlignment="Stretch">
             <materialDesign:DialogHost.DialogContent>
-                <StackPanel x:Name="Test"
-                            Background="White"
+                <StackPanel Background="White"
                             Margin="20,20,20,50"
                             Orientation="Vertical">
                     <TextBlock Text="New resident"
@@ -144,36 +219,18 @@
                                Margin="0,30,0,0"
                                Foreground="#FD0000" />
                     <Button Content="Submit"
-                            Command="{Binding ExecuteInsertCommand}"
+                            Style="{StaticResource MaterialDesignRaisedAccentButton}"
                             IsEnabled="{Binding IsAllFieldsComplete}"
+                            Command="{Binding ExecuteInsertCommand}"
+                            Background="#FFFFFF"
                             Margin="0,30,0,0"
                             Width="200"
                             Height="50" />
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
-            <StackPanel Orientation="Vertical">
-                <Grid Margin="10,50,10,10">
-                    <TextBlock Text="Admin list"
-                               Foreground="White"
-                               FontSize="18"
-                               FontFamily="Montserrat SemiBold"
-                               FontWeight="Regular"
-                               VerticalAlignment="Bottom"
-                               HorizontalAlignment="Right" />
-                </Grid>
-                <Grid Height="790">
-                    <DataGrid x:Name="MainGrid"
-                              ItemsSource="{Binding MainDataTable}"
-                              SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
-                              IsReadOnly="False"
-                              CanUserAddRows="False"
-                              SelectionMode="Extended"
-                              SelectionUnit="FullRow"
-                              Cursor="{Binding CursorType}"
-                              CanUserResizeRows="False" />
-                </Grid>
-            </StackPanel>
         </materialDesign:DialogHost>
+
+        <!-- Confirmation -->
         <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
                                    HorizontalAlignment="Stretch"
                                    CloseOnClickAway="True">
@@ -187,17 +244,17 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Margin="0,10,0,0">
-                        <Button IsDefault="True"
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" IsDefault="True"
                                 Margin="0,10,10,0"
                                 Content="YES"
                                 Command="{Binding ExecuteDeleteAdminCommand}"
-                                Foreground="Green">
+                                Foreground="#55A955">
                             <Button.CommandParameter>
                                 <system:Boolean>True</system:Boolean>
                             </Button.CommandParameter>
                         </Button>
 
-                        <Button IsCancel="True"
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" IsCancel="True"
                                 Margin="0,10,0,0"
                                 Content="NO"
                                 Command="materialDesign:DialogHost.CloseDialogCommand">
@@ -209,6 +266,8 @@
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
+        
+        <!-- Notification -->
         <materialDesign:Card UniformCornerRadius="25"
                              Width="200"
                              Height="50"
@@ -229,58 +288,5 @@
                            HorizontalAlignment="Center" />
             </Grid>
         </materialDesign:Card>
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Content="Delete"
-                Background="White"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Width="140"
-                Margin="601,800,416,0"
-                Command="{Binding ExecuteShowConfirmDialogCommand}" />
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Width="150"
-                Content="Update"
-                Background="White"
-                Command="{Binding ExecuteApplyUpdateCommand}"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Margin="760,800,247,0" />
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Width="150"
-                Content="Register"
-                Background="White"
-                Command="{Binding ExecuteRegistrationDialogCommand}"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Margin="932,800,75,0" />
-        <fa:ImageAwesome Icon="CircleOutlineNotch"
-                         Spin="True"
-                         Opacity="{Binding SpinnerEnable}"
-                         SpinDuration="2"
-                         Height="25"
-                         Width="25"
-                         VerticalAlignment="Top"
-                         HorizontalAlignment="Left"
-                         Foreground="#000000"
-                         Margin="50,825,0,0" />
-        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Margin="0,0,50,175"
-                Background="#DEDEDE"
-                Command="{Binding ExecuteRefreshCommand}">
-            <materialDesign:PackIcon Kind="Refresh"
-                                     VerticalAlignment="Center"
-                                     HorizontalAlignment="Center"
-                                     Width="32"
-                                     Height="32"
-                                     Foreground="Black" />
-        </Button>
     </Grid>
 </UserControl>

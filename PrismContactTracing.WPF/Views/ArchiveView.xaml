@@ -20,19 +20,16 @@
                                        HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Vertical">
                     <Grid Margin="10,50,10,10">
-                        <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                                materialDesign:ButtonAssist.CornerRadius="15"
-                                Height="35"
-                                Width="100"
+                        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
                                 Background="White"
                                 HorizontalAlignment="Left"
-                                Content="Search"
                                 Foreground="#23765A"
                                 FontSize="18"
                                 Visibility="{Binding IsVisible}"
                                 Command="{Binding ExecuteLoadArchivesCommand}"
                                 CommandParameter="{Binding ElementName=ResidentName}"
                                 RenderTransformOrigin="0.5,0.5">
+                            <materialDesign:PackIcon Kind="Search"/>
                             <Button.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform />
@@ -114,7 +111,7 @@
                 </materialDesign:DialogHost.DialogContent>
             </materialDesign:DialogHost>
             <!-- Buttons on top -->
-            <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
+            <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
                     FontFamily="Montserrat"
                     Height="50"
                     Width="150"

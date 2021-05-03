@@ -13,8 +13,129 @@
              d:DesignHeight="900"
              d:DesignWidth="1157">
     <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="10,50,10,10">
+                <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                        Background="White"
+                        HorizontalAlignment="Left"
+                        Foreground="#23765A"
+                        FontSize="18"
+                        Visibility="{Binding IsVisible}"
+                        Command="{Binding ExecuteSearchContentCommand}"
+                        RenderTransformOrigin="0.5,0.5">
+                    <materialDesign:PackIcon Kind="Search"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Center"/>
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform />
+                            <TranslateTransform X="280" />
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <TextBox Text="{Binding ResidentName, Mode=TwoWay}"
+                         Style="{DynamicResource MaterialDesignTextBox}"
+                         materialDesign:HintAssist.Hint="Resident name"
+                         materialDesign:HintAssist.FloatingScale="0.8"
+                         materialDesign:HintAssist.Foreground="White"
+                         materialDesign:HintAssist.IsFloating="True"
+                         materialDesign:HintAssist.HelperTextFontSize="20"
+                         FontFamily="Montserrat"
+                         Foreground="White"
+                         FontSize="18"
+                         MinHeight="50"
+                         Height="50"
+                         Width="267"
+                         HorizontalAlignment="Left"
+                         Visibility="{Binding IsVisible}" />
+                <TextBlock Text="Resident List"
+                           Foreground="White"
+                           FontSize="18"
+                           FontFamily="Montserrat SemiBold"
+                           FontWeight="Regular"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Right" />
+            </Grid>
+            <Grid Height="790">
+                <DataGrid x:Name="MainGrid"
+                          ItemsSource="{Binding MainDataTable}"
+                          SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
+                          IsReadOnly="False"
+                          CanUserAddRows="False"
+                          SelectionMode="Extended"
+                          SelectionUnit="FullRow"
+                          Cursor="{Binding CursorType}"
+                          CanUserResizeRows="False" />
+            </Grid>
+        </StackPanel>
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Content="Archive"
+                Background="White"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Width="140"
+                Margin="601,800,416,0"
+                Command="{Binding ExecuteShowConfirmDialogCommand}" />
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Width="150"
+                Content="Update"
+                Background="White"
+                Command="{Binding ExecuteApplyUpdateCommand}"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Margin="760,800,247,0" />
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Width="150"
+                Content="Register"
+                Background="White"
+                Command="{Binding ExecuteRegistrationDialogCommand}"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Margin="932,800,75,0" />
+        <fa:ImageAwesome Icon="CircleOutlineNotch"
+                         Spin="True"
+                         Opacity="{Binding SpinnerEnable}"
+                         SpinDuration="2"
+                         Height="25"
+                         Width="25"
+                         VerticalAlignment="Top"
+                         HorizontalAlignment="Left"
+                         Foreground="#000000"
+                         Margin="50,825,0,0" />
+        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="365,0,0,175"
+                Background="#DEDEDE"
+                Command="{Binding ExecuteRefreshCommand}">
+            <materialDesign:PackIcon Kind="Refresh"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Width="32"
+                                     Height="32"
+                                     Foreground="Black" />
+        </Button>
+        <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                FontFamily="Montserrat"
+                Height="50"
+                Content="Generate QR"
+                Background="White"
+                Foreground="#FF23765A"
+                VerticalAlignment="Top"
+                Width="140"
+                Margin="439,800,578,0"
+                Command="{Binding ExecuteGenerateQRCommand}" />
+        
         <!-- Registration -->
-        <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
+        <materialDesign:DialogHost   IsOpen="{Binding IsRegisterDialogOpen}"
                                    CloseOnClickAway="True"
                                    HorizontalAlignment="Stretch">
             <materialDesign:DialogHost.DialogContent>
@@ -149,74 +270,19 @@
                                Margin="0,30,0,0"
                                Foreground="#FD0000" />
                     <Button Content="Submit"
+                            Style="{StaticResource MaterialDesignRaisedAccentButton}"
                             IsEnabled="{Binding IsAllFieldsComplete}"
                             Command="{Binding ExecuteInsertCommand}"
+                            Background="#FFFFFF"
                             Margin="0,30,0,0"
                             Width="200"
                             Height="50" />
                 </StackPanel>
             </materialDesign:DialogHost.DialogContent>
-            <StackPanel Orientation="Vertical">
-                <Grid Margin="10,50,10,10">
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                            materialDesign:ButtonAssist.CornerRadius="15"
-                            Height="35"
-                            Width="100"
-                            Background="White"
-                            HorizontalAlignment="Left"
-                            Content="Search"
-                            Foreground="#23765A"
-                            FontSize="18"
-                            Visibility="{Binding IsVisible}"
-                            Command="{Binding ExecuteSearchContentCommand}"
-                            RenderTransformOrigin="0.5,0.5">
-                        <Button.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform />
-                                <SkewTransform />
-                                <RotateTransform />
-                                <TranslateTransform X="280" />
-                            </TransformGroup>
-                        </Button.RenderTransform>
-                    </Button>
-                    <TextBox Text="{Binding ResidentName, Mode=TwoWay}"
-                             Style="{DynamicResource MaterialDesignTextBox}"
-                             materialDesign:HintAssist.Hint="Resident name"
-                             materialDesign:HintAssist.FloatingScale="0.8"
-                             materialDesign:HintAssist.IsFloating="True"
-                             materialDesign:HintAssist.HelperTextFontSize="20"
-                             Foreground="#FFFFFF"
-                             FontFamily="Montserrat"
-                             FontSize="18"
-                             MinHeight="50"
-                             Height="50"
-                             Width="267"
-                             HorizontalAlignment="Left"
-                             Visibility="{Binding IsVisible}" />
-                    <TextBlock Text="Resident List"
-                               Foreground="White"
-                               FontSize="18"
-                               FontFamily="Montserrat SemiBold"
-                               FontWeight="Regular"
-                               VerticalAlignment="Bottom"
-                               HorizontalAlignment="Right" />
-                </Grid>
-                <Grid Height="790">
-                    <DataGrid x:Name="MainGrid"
-                              ItemsSource="{Binding MainDataTable}"
-                              SelectedItem="{Binding ResidentDataRowView, UpdateSourceTrigger=LostFocus}"
-                              IsReadOnly="False"
-                              CanUserAddRows="False"
-                              SelectionMode="Extended"
-                              SelectionUnit="FullRow"
-                              Cursor="{Binding CursorType}"
-                              CanUserResizeRows="False" />
-                </Grid>
-            </StackPanel>
+            
         </materialDesign:DialogHost>
         <materialDesign:DialogHost IsOpen="{Binding ShowConfirmDialog}"
-                                   CloseOnClickAway="True"
-                                   Margin="20,0,-20,0">
+                                   CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Margin="10"
                             Width="150"
@@ -269,68 +335,6 @@
                            HorizontalAlignment="Center" />
             </Grid>
         </materialDesign:Card>
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Content="Archive"
-                Background="White"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Width="140"
-                Margin="601,800,416,0"
-                Command="{Binding ExecuteShowConfirmDialogCommand}" />
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Width="150"
-                Content="Update"
-                Background="White"
-                Command="{Binding ExecuteApplyUpdateCommand}"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Margin="760,800,247,0" />
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Width="150"
-                Content="Register"
-                Background="White"
-                Command="{Binding ExecuteRegistrationDialogCommand}"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Margin="932,800,75,0" />
-        <fa:ImageAwesome Icon="CircleOutlineNotch"
-                         Spin="True"
-                         Opacity="{Binding SpinnerEnable}"
-                         SpinDuration="2"
-                         Height="25"
-                         Width="25"
-                         VerticalAlignment="Top"
-                         HorizontalAlignment="Left"
-                         Foreground="#000000"
-                         Margin="50,825,0,0" />
-        <Button Style="{DynamicResource MaterialDesignIconForegroundButton}"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Margin="365,0,0,175"
-                Background="#DEDEDE"
-                Command="{Binding ExecuteRefreshCommand}">
-            <materialDesign:PackIcon Kind="Refresh"
-                                     VerticalAlignment="Center"
-                                     HorizontalAlignment="Center"
-                                     Width="32"
-                                     Height="32"
-                                     Foreground="Black" />
-        </Button>
-        <Button Style="{DynamicResource MaterialDesignFlatDarkBgButton}"
-                FontFamily="Montserrat"
-                Height="50"
-                Content="Generate QR"
-                Background="White"
-                Foreground="#FF23765A"
-                VerticalAlignment="Top"
-                Width="140"
-                Margin="439,800,578,0"
-                Command="{Binding ExecuteGenerateQRCommand}" />
+        
     </Grid>
 </UserControl>
