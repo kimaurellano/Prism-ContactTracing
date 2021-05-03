@@ -15,7 +15,8 @@ namespace PrismContactTracing.Core.DataComponent {
         public enum Mark {
             Archive = 2,
             QR = 1,
-            Restore = 1
+            Restore = 1,
+            Delete = 1
         }
 
         private DbConnector _dbConnector;
