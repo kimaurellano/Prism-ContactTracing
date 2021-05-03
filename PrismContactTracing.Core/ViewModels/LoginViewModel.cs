@@ -14,12 +14,18 @@ namespace PrismContactTracing.Core.ViewModels {
         private IDbConnector _dbConnector;
         private string _username;
         private float _spinnerEnable;
+        private bool _allowLogin;
 
         public DelegateCommand<object> ExecuteGenericDelegateCommand { get; private set; }
 
         public string Username {
             get { return _username; }
             set { SetProperty(ref _username, value); }
+        }
+
+        public bool AllowLogin { 
+            get => _allowLogin; 
+            set { SetProperty(ref _allowLogin, value); RaisePropertyChanged("AllowLogin"); } 
         }
 
         public float SpinnerEnable {
@@ -32,11 +38,15 @@ namespace PrismContactTracing.Core.ViewModels {
             _dbConnector = dbConnector;
 
             ExecuteGenericDelegateCommand = new DelegateCommand<object>(async (p) => await ExecuteGeneric(p));
+
+            AllowLogin = true;
         }
 
         private async Task ExecuteGeneric(object parameter) {
             var result = await Task.Run(() => {
                 SpinnerEnable = 1;
+
+                AllowLogin = !AllowLogin;
 
                 _dbConnector.Connect();
 
@@ -71,6 +81,8 @@ namespace PrismContactTracing.Core.ViewModels {
             });
 
             SpinnerEnable = 0;
+
+            AllowLogin = !AllowLogin;
 
             Navigate(result);
         }

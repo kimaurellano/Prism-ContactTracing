@@ -121,6 +121,7 @@
                     Style="{StaticResource MaterialDesignRaisedAccentButton}"
                     Command="{Binding ExecuteGenericDelegateCommand}"
                     CommandParameter="{Binding ElementName=txtPassword}"
+                    IsEnabled="{Binding AllowLogin}"
                     IsDefault="True"
                     materialDesign:ButtonAssist.CornerRadius="25"
                     VerticalAlignment="Bottom"
@@ -131,7 +132,7 @@
                     Width="150"
                     Margin="0,70,0,0" />
         </StackPanel>
-        <fa:ImageAwesome Icon="CircleOutlineNotch"
+        <fa:ImageAwesome Name="Spinner" Icon="CircleOutlineNotch"
                          Spin="True"
                          Opacity="{Binding SpinnerEnable}"
                          SpinDuration="2"
