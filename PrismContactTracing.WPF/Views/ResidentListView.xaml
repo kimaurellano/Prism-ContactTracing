@@ -135,7 +135,7 @@
                 Command="{Binding ExecuteGenerateQRCommand}" />
         
         <!-- Registration -->
-        <materialDesign:DialogHost   IsOpen="{Binding IsRegisterDialogOpen}"
+        <materialDesign:DialogHost IsOpen="{Binding IsRegisterDialogOpen}"
                                    CloseOnClickAway="True"
                                    HorizontalAlignment="Stretch">
             <materialDesign:DialogHost.DialogContent>
@@ -293,7 +293,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Margin="0,10,0,0">
-                        <Button IsDefault="True"
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" IsDefault="True"
                                 Margin="0,10,10,0"
                                 Content="YES"
                                 Command="{Binding ExecuteArchiveResidentCommand}"
@@ -303,7 +303,7 @@
                             </Button.CommandParameter>
                         </Button>
 
-                        <Button IsCancel="True"
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" IsCancel="True"
                                 Margin="0,10,0,0"
                                 Content="NO"
                                 Command="materialDesign:DialogHost.CloseDialogCommand">
