@@ -129,6 +129,8 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void StartListen(string port) {
             if (!_serialPort.IsOpen) {
+                SerialLog = "Connecting...";
+
                 // Just in case other port are opened before. Need to close that first.
                 _serialPort.Close();
 
