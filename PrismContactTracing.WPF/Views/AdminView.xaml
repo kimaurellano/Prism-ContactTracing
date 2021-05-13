@@ -236,17 +236,19 @@
                                    CloseOnClickAway="True">
             <materialDesign:DialogHost.DialogContent>
                 <StackPanel Margin="10"
-                            Width="150"
-                            Height="90">
-                    <TextBlock HorizontalAlignment="Center"
-                               Text="Do you want to delete?" />
+                            Width="200"
+                            Height="120">
+                    <TextBlock HorizontalAlignment="Left"
+                               Text="Enter password to confirm" />
+                    <PasswordBox x:Name="PasswordBox"
+                                 Margin="0,10,0,0"/>
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Margin="0,10,0,0">
+                                Margin="0,15,0,0">
                         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" IsDefault="True"
                                 Margin="0,10,10,0"
-                                Content="YES"
+                                Content="Submit"
                                 Command="{Binding ExecuteDeleteAdminCommand}"
                                 Foreground="#55A955">
                             <Button.CommandParameter>
@@ -256,7 +258,7 @@
 
                         <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" IsCancel="True"
                                 Margin="0,10,0,0"
-                                Content="NO"
+                                Content="Cancel"
                                 Command="materialDesign:DialogHost.CloseDialogCommand">
                             <Button.CommandParameter>
                                 <system:Boolean>False</system:Boolean>
@@ -267,6 +269,39 @@
             </materialDesign:DialogHost.DialogContent>
         </materialDesign:DialogHost>
         
+        <!-- Security dialog -->
+        <materialDesign:DialogHost IsOpen="{Binding ShowSecurityConfirmationDialog}"
+                                   HorizontalAlignment="Stretch"
+                                   CloseOnClickAway="False">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="10"
+                            Width="200"
+                            Height="120">
+                    <TextBlock HorizontalAlignment="Left"
+                               Text="Enter password to confirm" />
+                    <PasswordBox x:Name="PasswordInput"
+                                 Margin="0,10,0,0" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,15,0,0">
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                                IsDefault="True"
+                                Margin="0,10,10,0"
+                                Content="Submit"
+                                Command="{Binding ExecuteConfirmAccess}"
+                                CommandParameter="{Binding ElementName=PasswordInput}"
+                                Foreground="#55A955" />
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                                IsCancel="True"
+                                Margin="0,10,0,0"
+                                Content="Cancel"
+                                Command="{Binding ExecuteCancelAccess}" />
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
         <!-- Notification -->
         <materialDesign:Card UniformCornerRadius="25"
                              Width="200"

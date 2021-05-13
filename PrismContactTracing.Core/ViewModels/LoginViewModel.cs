@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using PrismContactTracing.Core.DataComponent;
 using PrismContactTracing.Core.Interface;
 using System.Threading.Tasks;
 using System.Windows;
@@ -76,6 +77,8 @@ namespace PrismContactTracing.Core.ViewModels {
                     MessageBox.Show("Invalid credentials", "Login error", MessageBoxButton.OK);
                     return string.Empty;
                 }
+
+                Persistent.LoggedUser = Username;
 
                 return "HomeView";
             });

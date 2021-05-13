@@ -1,18 +1,25 @@
-﻿using Prism.Commands;
+﻿using MySql.Data.MySqlClient;
+using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using PrismContactTracing.Core.DataComponent;
+using PrismContactTracing.Core.Interface;
 using PrismContactTracing.Core.Listener;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace PrismContactTracing.Core.ViewModels {
-    public class AdminViewModel : BindableBase {
+    public class AdminViewModel : BindableBase, INavigationAware {
         private IDataListener _dataListener;
+        private IRegionManager _regionManager;
+        private IDbConnector _dbConnector;
         private DataRowView _residentDataRowView;
         private DataTable _mainTable;
         private Cursor _cursorType;
@@ -34,6 +41,7 @@ namespace PrismContactTracing.Core.ViewModels {
         private string _password;
         private string _username;
         private string _level;
+        private bool _showSecurityConfirmationDialog;
 
         #region Delegates
         public DelegateCommand AddNewResidentCommand { get; private set; }
@@ -48,6 +56,8 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand ExecuteDeleteAdminCommand { get; private set; }
         public DelegateCommand ExecuteShowConfirmDialogCommand { get; private set; }
         public DelegateCommand ExecuteInsertCommand { get; private set; }
+        public DelegateCommand<object> ExecuteConfirmAccess { get; private set; }
+        public DelegateCommand ExecuteCancelAccess { get; private set; }
         #endregion Delegates
 
         #region GetterSetter
@@ -72,6 +82,11 @@ namespace PrismContactTracing.Core.ViewModels {
         public string ResidentName {
             get => _residentName;
             set { SetProperty(ref _residentName, value); }
+        }
+
+        public bool ShowSecurityConfirmationDialog {
+            get => _showSecurityConfirmationDialog;
+            set { SetProperty(ref _showSecurityConfirmationDialog, value); RaisePropertyChanged("ShowSecurityConfirmationDialog"); }
         }
 
         public bool ShowConfirmDialog {
@@ -131,7 +146,11 @@ namespace PrismContactTracing.Core.ViewModels {
         }
         #endregion GetterSetter
 
-        public AdminViewModel(IDataListener dataListener) {
+        public AdminViewModel(IDataListener dataListener, IRegionManager regionManager, IDbConnector dbConnector) {
+            ShowSecurityConfirmationDialog = true;
+
+            _dbConnector = dbConnector;
+            _regionManager = regionManager;
             _dataListener = dataListener;
             _dataListener.StartDbChangesListener();
 
@@ -139,6 +158,8 @@ namespace PrismContactTracing.Core.ViewModels {
 
             Task.Run(() => LoadAdmins());
 
+            ExecuteCancelAccess = new DelegateCommand(() => { ShowSecurityConfirmationDialog = !ShowSecurityConfirmationDialog; NavigateTo("ResidentListView"); });
+            ExecuteConfirmAccess = new DelegateCommand<object>((passwordParameter) => { ValidateUser(passwordParameter); });
             ExecuteRefreshCommand = new DelegateCommand(RefreshTable);
             ExecuteDeleteAdminCommand = new DelegateCommand(async () => await DeleteAdmin());
             ExecuteShowConfirmDialogCommand = new DelegateCommand(() => { ShowConfirmDialog = !ShowConfirmDialog; });
@@ -213,8 +234,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_password", Password));
                 parameter.Add(new KeyValuePair<string, string>("@m_level", Level));
                 parameter.Add(new KeyValuePair<string, string>("@m_address", Address));
-                parameter.Add(new KeyValuePair<string, string>("@m_first_name", FirstName));
-                parameter.Add(new KeyValuePair<string, string>("@m_last_name", LastName));
+                parameter.Add(new KeyValuePair<string, string>("@m_first_name", Format(FirstName)));
+                parameter.Add(new KeyValuePair<string, string>("@m_last_name", Format(LastName)));
                 parameter.Add(new KeyValuePair<string, string>("@m_contact_number", ContactNumber));
 
                 QueryStrategy queryStrategy = new QueryStrategy();
@@ -281,6 +302,50 @@ namespace PrismContactTracing.Core.ViewModels {
             }
 
             return true;
+        }
+
+        private void NavigateTo(string page) {
+            if (page != null) {
+                _regionManager.RequestNavigate("ContentType", page);
+            }
+        }
+
+        private void ValidateUser(object password) {
+            _dbConnector.Connect();
+
+            MySqlCommand cmd = new MySqlCommand("GetUser", _dbConnector.DbConnectionInstance) {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.AddWithValue("@m_username", Persistent.LoggedUser);
+            cmd.Parameters.AddWithValue("@m_password", ((PasswordBox)password).Password);
+            cmd.Parameters.Add("@totalcount", MySqlDbType.Int32);
+            cmd.Parameters["@totalcount"].Direction = ParameterDirection.Output;
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+
+            _dbConnector.Disconnect();
+
+            int count = (int)cmd.Parameters["@totalcount"].Value;
+
+            if (count == 0) {
+                MessageBox.Show("Invalid credentials.", "Access rejected", MessageBoxButton.OK);
+
+                return;
+            }
+
+            Show("Access granted", 1500);
+
+            ShowSecurityConfirmationDialog = !ShowSecurityConfirmationDialog;
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext) { return; }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext) { return false; }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext) {
+            var singleView = _regionManager.Regions["ContentType"].ActiveViews.FirstOrDefault();
+            _regionManager.Regions["ContentType"].Deactivate(singleView);
         }
     }
 }

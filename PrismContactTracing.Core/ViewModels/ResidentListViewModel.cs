@@ -174,7 +174,6 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 string path = string.Empty;
                 foreach (var item in checkForMarks.RowDatas) {
-                    // TODO: PNG Generation function
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();
                     QRCodeData qrCodeData = qrGenerator.CreateQrCode(item, QRCodeGenerator.ECCLevel.Q);
                     QRCode qrCode = new QRCode(qrCodeData);
@@ -386,6 +385,10 @@ namespace PrismContactTracing.Core.ViewModels {
         private void RefreshTable() {
             Task.Run(() => LoadResidentList(string.Empty));
         }
+
+        // Create separate manager for the likes of this functions
+        // below
+        // *************************************************************
 
         private string Format(string text) {
             string firstChar = text.Substring(0, 1).ToUpper();
