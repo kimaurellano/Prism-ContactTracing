@@ -28,19 +28,58 @@ namespace PrismContactTracing.Core.ViewModels {
         private string _serialLog;
         private bool _allowPortChange;
         private string _connectionState;
+        private string _hasColds;
+        private string _hasCoughs;
+        private string _lastName;
+        private string _firstName;
+        private string _timeIn;
+        private string _hasFever;
+        private string _temperature;
+        private string _residentId;
 
         public DelegateCommand<string> ConnectPortCommand { get; private set; }
         public DelegateCommand<string> NavigateToCommand { get; private set; }
         public DelegateCommand ExecuteLogoutCommand { get; private set; }
         public DelegateCommand ExecuteConfirmCommand { get; private set; }
-        public string ResidentId { get; private set; }
-        public string Temperature { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string HasCoughs { get; private set; }
-        public string HasColds { get; private set; }
-        public string HasFever { get; private set; }
-        public string TimeIn { get; private set; }
+        public string ResidentId {
+            get => _residentId;
+            set { SetProperty(ref _residentId, value); RaisePropertyChanged("ResidentId"); }
+        }
+
+        public string Temperature {
+            get => _temperature;
+            set { SetProperty(ref _temperature, value); RaisePropertyChanged("Temperature"); }
+        }
+
+        public string FirstName {
+            get => _firstName;
+            set { SetProperty(ref _firstName, value); RaisePropertyChanged("FirstName"); }
+        }
+
+        public string LastName {
+            get => _lastName;
+            set { SetProperty(ref _lastName, value); RaisePropertyChanged("LastName"); }
+        }
+
+        public string HasCoughs {
+            get => _hasCoughs;
+            set { SetProperty(ref _hasCoughs, value); RaisePropertyChanged("HasCoughs"); }
+        }
+
+        public string HasColds { 
+            get => _hasColds; 
+            set { SetProperty(ref _hasColds, value); RaisePropertyChanged("HasColds"); } 
+        }
+
+        public string HasFever {
+            get => _hasFever;
+            set { SetProperty(ref _hasFever, value); RaisePropertyChanged("HasFever"); }
+        }
+
+        public string TimeIn {
+            get => _timeIn;
+            set { SetProperty(ref _timeIn, value); RaisePropertyChanged("TimeIn"); }
+        }
 
         public string ConnectionState { 
             get => _connectionState; 
@@ -167,9 +206,10 @@ namespace PrismContactTracing.Core.ViewModels {
 
         private void RefreshTraceLog(object sender, SerialDataReceivedEventArgs e) {
             SerialPort sp = (SerialPort)sender;
-            string indata = sp.ReadExisting();
+            string indata = sp.ReadLine();
+            sp.DiscardInBuffer();
 
-            if (indata.ToLower().Contains("connected")) {
+            if (indata.ToLower().Contains("start")) {
                 SerialLog = "Connected";
 
                 SerialButtonEnable = !SerialButtonEnable;
@@ -181,10 +221,15 @@ namespace PrismContactTracing.Core.ViewModels {
 
             // We are expecting value like this
             // QR:FirstName,LastName,Purok,Address,ContactNumber,EContact,EName
-            if (indata.Contains("QR")) {
-                string qrData = indata.Replace("QR:", "");
+            if (indata.Contains(",")) {
+                string qrData = indata.Trim();
+                qrData = qrData.Replace("\0", "");
 
                 DataTable resultTable = CheckResident(qrData);
+                if(resultTable == null) {
+                    MessageBox.Show($"Returned malformed data: {qrData}", "BUG REPORT", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 // Only one row is populated to the datatable. so idx 0(row 0 at col 0) we use.
                 ResidentId = resultTable.Rows[0].ItemArray[0].ToString();
@@ -229,6 +274,10 @@ namespace PrismContactTracing.Core.ViewModels {
             List<string> residentInfo = new List<string>();
             foreach (var data in qrData.Split(',')) {
                 residentInfo.Add(data);
+            }
+
+            if(residentInfo.Count < 7) {
+                return null;
             }
 
             List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
