@@ -41,6 +41,7 @@ namespace PrismContactTracing.Core.ViewModels {
         public DelegateCommand<string> NavigateToCommand { get; private set; }
         public DelegateCommand ExecuteLogoutCommand { get; private set; }
         public DelegateCommand ExecuteConfirmCommand { get; private set; }
+
         public string ResidentId {
             get => _residentId;
             set { SetProperty(ref _residentId, value); RaisePropertyChanged("ResidentId"); }
@@ -190,7 +191,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 SerialLog = "Disconnected";
             }
 
-            LogVisibility = _serialPort.IsOpen ? Visibility.Visible : Visibility.Hidden;
+            LogVisibility = _serialPort.IsOpen ? Visibility.Hidden : Visibility.Visible;
             ConnectionState = _serialPort.IsOpen ? "Disconnect" : "Connect";
             AllowPortChange = !_serialPort.IsOpen;
         }
@@ -280,14 +281,15 @@ namespace PrismContactTracing.Core.ViewModels {
                 return null;
             }
 
-            List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
-            parameter.Add(new KeyValuePair<string, string>("@m_firstname", residentInfo[0]));
-            parameter.Add(new KeyValuePair<string, string>("@m_lastname", residentInfo[1]));
-            parameter.Add(new KeyValuePair<string, string>("@m_purok", residentInfo[2]));
-            parameter.Add(new KeyValuePair<string, string>("@m_contact", residentInfo[3]));
-            parameter.Add(new KeyValuePair<string, string>("@m_address", residentInfo[4]));
-            parameter.Add(new KeyValuePair<string, string>("@m_econtact", residentInfo[5]));
-            parameter.Add(new KeyValuePair<string, string>("@m_ename", residentInfo[6]));
+            List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>> {
+                new KeyValuePair<string, string>("@m_firstname", residentInfo[0]),
+                new KeyValuePair<string, string>("@m_lastname", residentInfo[1]),
+                new KeyValuePair<string, string>("@m_purok", residentInfo[2]),
+                new KeyValuePair<string, string>("@m_contact", residentInfo[3]),
+                new KeyValuePair<string, string>("@m_address", residentInfo[4]),
+                new KeyValuePair<string, string>("@m_econtact", residentInfo[5]),
+                new KeyValuePair<string, string>("@m_ename", residentInfo[6])
+            };
 
 
             QueryStrategy queryStrategy = new QueryStrategy();
