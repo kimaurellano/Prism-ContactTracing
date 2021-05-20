@@ -228,7 +228,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 DataTable resultTable = CheckResident(qrData);
                 if(resultTable == null) {
-                    MessageBox.Show($"Returned malformed data: {qrData}", "BUG REPORT", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Returned malformed/not found data: {qrData}");
                     return;
                 }
 
@@ -285,8 +285,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 new KeyValuePair<string, string>("@m_firstname", residentInfo[0]),
                 new KeyValuePair<string, string>("@m_lastname", residentInfo[1]),
                 new KeyValuePair<string, string>("@m_purok", residentInfo[2]),
-                new KeyValuePair<string, string>("@m_contact", residentInfo[3]),
-                new KeyValuePair<string, string>("@m_address", residentInfo[4]),
+                new KeyValuePair<string, string>("@m_address", residentInfo[3]),
+                new KeyValuePair<string, string>("@m_contact", residentInfo[4]),
                 new KeyValuePair<string, string>("@m_econtact", residentInfo[5]),
                 new KeyValuePair<string, string>("@m_ename", residentInfo[6])
             };
