@@ -180,9 +180,12 @@
                                        FontSize="18"
                                        Margin="30,30,0,0" />
                             <TextBlock Text="{Binding ResidentId}"
+                                       TextAlignment="Center"
                                        FontFamily="Montserrat Semibold"
                                        FontSize="18"
-                                       Foreground="#23765A" />
+                                       Foreground="#23765A"
+                                       Margin="30,30,0,0"
+                                       Height="19" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Temperature"
@@ -192,6 +195,7 @@
                             <TextBlock Text="{Binding Temperature}"
                                        FontFamily="Montserrat Semibold"
                                        FontSize="18"
+                                       Margin="30,30,0,0"
                                        Foreground="#23765A" />
                         </StackPanel>
                         <TextBlock Text="First Name"
