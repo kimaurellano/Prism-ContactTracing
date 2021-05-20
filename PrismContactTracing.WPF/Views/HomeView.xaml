@@ -274,17 +274,6 @@
                                        Margin="30,0,0,0" />
                         </StackPanel>
                     </StackPanel>
-                    <Border Style="{StaticResource LoginCustomBorder}"
-                            Margin="0,0,0,145"
-                            Visibility="{Binding LogVisibilty}">
-                        <TextBlock Text="Disconnected"
-                                   FontSize="32"
-                                   FontFamily="Montserrat Semibold"
-                                   Foreground="#FD5555"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center">
-                        </TextBlock>
-                    </Border>
                     <TextBlock Text="Serial Port"
                                FontFamily="Montserrat Semibold"
                                FontSize="18"
