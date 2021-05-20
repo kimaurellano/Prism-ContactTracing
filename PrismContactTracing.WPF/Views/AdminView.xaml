@@ -96,7 +96,7 @@
                 <StackPanel Background="White"
                             Margin="20,20,20,50"
                             Orientation="Vertical">
-                    <TextBlock Text="New resident"
+                    <TextBlock Text="New admin"
                                FontFamily="Montserrat Semibold"
                                FontSize="24"
                                HorizontalAlignment="Left"
