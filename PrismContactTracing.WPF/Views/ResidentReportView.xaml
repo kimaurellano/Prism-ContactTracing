@@ -48,7 +48,7 @@
                 </Button>
                 <TextBox Text="{Binding ResidentName, Mode=TwoWay}"
                          Style="{DynamicResource MaterialDesignTextBox}"
-                         materialDesign:HintAssist.Hint="Resident name"
+                         materialDesign:HintAssist.Hint="resident's first name"
                          materialDesign:HintAssist.Foreground="#FFFFFF"
                          materialDesign:HintAssist.FloatingScale="0.8"
                          materialDesign:HintAssist.IsFloating="True"
