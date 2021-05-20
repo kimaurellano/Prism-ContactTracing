@@ -238,6 +238,15 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_last_name", Format(LastName)));
                 parameter.Add(new KeyValuePair<string, string>("@m_contact_number", ContactNumber));
 
+                // Clear on submit
+                Username = string.Empty;
+                Password = string.Empty;
+                Level = string.Empty;
+                Address = string.Empty;
+                FirstName = string.Empty;
+                LastName = string.Empty;
+                ContactNumber = string.Empty;
+
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new InsertQuery() {
                     Procedure = "InsertAdmin",
