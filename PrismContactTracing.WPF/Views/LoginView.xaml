@@ -146,5 +146,11 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Bottom"
                    Margin="5,5" />
+        <Image VerticalAlignment="Top"
+               HorizontalAlignment="Left"
+               Margin="50,50,0,0"
+               Width="300"
+               Height="200"
+               Source="/PrismContactTracing.WPF;component/Views/Logo_Barangay.png" />
     </Grid>
 </UserControl>
