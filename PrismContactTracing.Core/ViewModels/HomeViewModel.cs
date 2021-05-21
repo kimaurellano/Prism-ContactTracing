@@ -228,7 +228,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 DataTable resultTable = CheckResident(qrData);
                 if(resultTable == null) {
-                    MessageBox.Show($"Returned malformed/not found data: {qrData}");
+                    MessageBox.Show($"malformed/not found data: {qrData}", "Record info");
                     return;
                 }
 
@@ -246,6 +246,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
             if (indata.Contains("TEMP:")) {
                 Temperature = indata.Split(":")[1];
+                HasFever = float.Parse(Temperature) > 37.2 ? "YES" : "NO";
             } else if (indata.Contains("COLD:")) {
                 HasColds = indata.Split(":")[1];
             } else if (indata.Contains("COUGH:")) {
@@ -254,8 +255,6 @@ namespace PrismContactTracing.Core.ViewModels {
                 // I did not find any fever check only last one checked is cough.
                 // Then shoud insert after cough check.
                 Task.Run(() => InsertResidentContactTrace());
-            } else if (indata.Contains("FEVER:")) {
-                HasFever = indata.Split(":")[1];
             }
         }
 
@@ -281,6 +280,9 @@ namespace PrismContactTracing.Core.ViewModels {
                 return null;
             }
 
+            FirstName = residentInfo[0];
+            LastName = residentInfo[1];
+
             List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>> {
                 new KeyValuePair<string, string>("@m_firstname", residentInfo[0]),
                 new KeyValuePair<string, string>("@m_lastname", residentInfo[1]),
@@ -291,6 +293,13 @@ namespace PrismContactTracing.Core.ViewModels {
                 new KeyValuePair<string, string>("@m_ename", residentInfo[6])
             };
 
+            ResidentId = string.Empty;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            HasColds = string.Empty;
+            HasCoughs = string.Empty;
+            HasFever = string.Empty;
+            Temperature = string.Empty;
 
             QueryStrategy queryStrategy = new QueryStrategy();
             queryStrategy.SetQuery(new GetDataQuery() {
@@ -309,7 +318,7 @@ namespace PrismContactTracing.Core.ViewModels {
                 parameter.Add(new KeyValuePair<string, string>("@m_temperature", Temperature));
                 parameter.Add(new KeyValuePair<string, string>("@m_has_coughs", HasCoughs));
                 parameter.Add(new KeyValuePair<string, string>("@m_has_colds", HasColds));
-                parameter.Add(new KeyValuePair<string, string>("@m_has_fever", "N/A"));
+                parameter.Add(new KeyValuePair<string, string>("@m_has_fever", float.Parse(Temperature) > 37.2 ? "YES" : "NO"));
 
                 QueryStrategy queryStrategy = new QueryStrategy();
                 queryStrategy.SetQuery(new InsertQuery() {
