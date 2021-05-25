@@ -248,6 +248,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 if(resultTable.Rows.Count > 0) {
                     // Allow body scan
                     sp.Write("Registered");
+
+                    TimeIn = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
                 } else {
                     sp.Write("Not Registered");
                 }
