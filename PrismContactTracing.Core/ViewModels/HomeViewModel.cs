@@ -226,6 +226,15 @@ namespace PrismContactTracing.Core.ViewModels {
                 string qrData = indata.Trim();
                 qrData = qrData.Replace("\0", "");
 
+                // Clear for next qr scan
+                ResidentId = string.Empty;
+                FirstName = string.Empty;
+                LastName = string.Empty;
+                HasColds = string.Empty;
+                HasCoughs = string.Empty;
+                HasFever = string.Empty;
+                Temperature = string.Empty;
+
                 DataTable resultTable = CheckResident(qrData);
                 if(resultTable == null) {
                     MessageBox.Show($"malformed/not found data: {qrData}", "Record info");
@@ -255,6 +264,8 @@ namespace PrismContactTracing.Core.ViewModels {
                 // I did not find any fever check only last one checked is cough.
                 // Then shoud insert after cough check.
                 Task.Run(() => InsertResidentContactTrace());
+            } else if (indata.Contains("FEVER:")) {
+                HasFever = indata.Split(":")[1];
             }
         }
 
@@ -292,14 +303,6 @@ namespace PrismContactTracing.Core.ViewModels {
                 new KeyValuePair<string, string>("@m_econtact", residentInfo[5]),
                 new KeyValuePair<string, string>("@m_ename", residentInfo[6])
             };
-
-            ResidentId = string.Empty;
-            FirstName = string.Empty;
-            LastName = string.Empty;
-            HasColds = string.Empty;
-            HasCoughs = string.Empty;
-            HasFever = string.Empty;
-            Temperature = string.Empty;
 
             QueryStrategy queryStrategy = new QueryStrategy();
             queryStrategy.SetQuery(new GetDataQuery() {
