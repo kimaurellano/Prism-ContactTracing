@@ -258,12 +258,12 @@ namespace PrismContactTracing.Core.ViewModels {
                 HasFever = float.Parse(Temperature) > 37.2 ? "YES" : "NO";
             } else if (indata.Contains("COLD:")) {
                 HasColds = indata.Split(":")[1];
-            } else if (indata.Contains("COUGH:")) {
-                HasCoughs = indata.Split(":")[1];
 
                 // I did not find any fever check only last one checked is cough.
                 // Then shoud insert after cough check.
                 Task.Run(() => InsertResidentContactTrace());
+            } else if (indata.Contains("COUGH:")) {
+                HasCoughs = indata.Split(":")[1];
             } else if (indata.Contains("FEVER:")) {
                 HasFever = indata.Split(":")[1];
             }
