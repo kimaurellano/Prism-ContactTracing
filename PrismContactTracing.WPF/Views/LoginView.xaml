@@ -142,7 +142,7 @@
                          HorizontalAlignment="Left"
                          Foreground="#000000"
                          Margin="949,753,0,0" />
-        <TextBlock Text="v0.9"
+        <TextBlock Text="v0.9_1016_052421"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Bottom"
                    Margin="5,5" />
