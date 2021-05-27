@@ -23,7 +23,7 @@
                             FontSize="18"
                             Visibility="{Binding IsVisible}"
                             Command="{Binding ExecuteLoadArchivesCommand}"
-                            CommandParameter="{Binding ElementName=ResidentName}"
+                            CommandParameter="{Binding ElementName=ResidentName, Path=Text}"
                             RenderTransformOrigin="0.5,0.5">
                         <materialDesign:PackIcon Kind="Search" />
                         <Button.RenderTransform>
@@ -38,7 +38,7 @@
                     <TextBox x:Name="ResidentName"
                              Text="{Binding ResidentName, Mode=TwoWay}"
                              Style="{DynamicResource MaterialDesignTextBox}"
-                             materialDesign:HintAssist.Hint="Resident name"
+                             materialDesign:HintAssist.Hint="resident's first name"
                              materialDesign:HintAssist.FloatingScale="0.8"
                              materialDesign:HintAssist.IsFloating="True"
                              materialDesign:HintAssist.HelperTextFontSize="20"
