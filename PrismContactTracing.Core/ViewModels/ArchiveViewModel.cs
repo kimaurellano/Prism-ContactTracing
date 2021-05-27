@@ -168,7 +168,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>>();
                 if (residentName != string.Empty) {
-                    parameter.Add(new KeyValuePair<string, string>("@m_archive_key", residentName));
+                    parameter.Add(new KeyValuePair<string, string>("@m_archive_name", residentName));
                 }
 
                 QueryStrategy queryStrategy = new QueryStrategy();
