@@ -237,6 +237,7 @@ namespace PrismContactTracing.Core.ViewModels {
 
                 DataTable resultTable = CheckResident(qrData);
                 if(resultTable == null) {
+                    sp.Write("Not Registered");
                     MessageBox.Show($"malformed/not found data: {qrData}", "Record info");
                     return;
                 }
@@ -245,14 +246,10 @@ namespace PrismContactTracing.Core.ViewModels {
                 ResidentId = resultTable.Rows[0].ItemArray[0].ToString();
                 RaisePropertyChanged("ResidentId");
 
-                if(resultTable.Rows.Count > 0) {
-                    // Allow body scan
-                    sp.Write("Registered");
+                // Allow body scan
+                sp.Write("Registered");
 
-                    TimeIn = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
-                } else {
-                    sp.Write("Not Registered");
-                }
+                TimeIn = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
             }
 
             if (indata.Contains("TEMP:")) {
