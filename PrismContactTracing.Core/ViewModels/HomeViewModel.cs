@@ -221,7 +221,7 @@ namespace PrismContactTracing.Core.ViewModels {
             }
 
             // We are expecting value like this
-            // QR:FirstName,LastName,Purok,Address,ContactNumber,EContact,EName
+            // FirstName,LastName,Purok,Address,ContactNumber,EContact,EName
             if (indata.Contains(",")) {
                 string qrData = indata.Trim();
                 qrData = qrData.Replace("\0", "");
@@ -293,9 +293,6 @@ namespace PrismContactTracing.Core.ViewModels {
                 return null;
             }
 
-            FirstName = residentInfo[0];
-            LastName = residentInfo[1];
-
             List<KeyValuePair<string, string>> parameter = new List<KeyValuePair<string, string>> {
                 new KeyValuePair<string, string>("@m_firstname", residentInfo[0]),
                 new KeyValuePair<string, string>("@m_lastname", residentInfo[1]),
@@ -311,6 +308,11 @@ namespace PrismContactTracing.Core.ViewModels {
                 Procedure = "GetUniqueResident",
                 Parameters = parameter
             });
+
+            if(queryStrategy.MainDataTable != null) {
+                FirstName = residentInfo[0];
+                LastName = residentInfo[1];
+            }
 
             return queryStrategy.MainDataTable;
         }
